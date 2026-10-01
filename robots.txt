@@ -1,0 +1,4 @@
+# DEMO SITE — crawling blocked on purpose.
+# At launch: replace with 'User-agent: *' / 'Allow: /' and the real sitemap URL.
+User-agent: *
+Disallow: /

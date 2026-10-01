@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268 96" width="268" height="96" role="img" aria-label="Killion Remodeling">
+  <rect x="0" y="0" width="96" height="96" rx="20" fill="#FFFFFF" fill-opacity=".09"/>
+  <rect x="0.75" y="0.75" width="94.5" height="94.5" rx="19.25" fill="none" stroke="#FFFFFF" stroke-opacity=".2" stroke-width="1.5"/>
+  <g stroke="#E89B2C" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M31 26V70"/>
+    <path d="M67 26 41 48l26 22"/>
+  </g>
+  <rect x="20" y="78" width="56" height="5" rx="2.5" fill="#E89B2C" opacity=".55"/>
+  <text x="116" y="47" font-family="Archivo, Arial Black, sans-serif" font-size="30" font-weight="900" fill="#FFFFFF" letter-spacing=".5">KILLION</text>
+  <text x="117" y="68" font-family="Archivo, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#E89B2C" letter-spacing="4.1">REMODELING</text>
+</svg>
