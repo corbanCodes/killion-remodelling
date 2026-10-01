@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Killion Remodelling — site generator.
+"""Killion Remodeling — site generator.
 
 Reads content.py and writes the whole static site into the repo root.
 Run:  python3 _generator/build.py
@@ -180,7 +180,7 @@ def quote_form(form_id="quote", compact=False, minimal=False, source="", presele
       <div class="field"><label for="{form_id}-town">Town</label>
         <input id="{form_id}-town" name="full_address" type="text" autocomplete="address-level2" placeholder="{esc(C.CITY)}, {C.STATE_ABBR}"></div>{boxes_block}{msg}
       <input type="hidden" name="business" value="{esc(C.BIZ)}">
-      <input type="hidden" name="business_type" value="Handyman, painting &amp; general remodelling">
+      <input type="hidden" name="business_type" value="Handyman, painting &amp; general remodeling">
       <input type="hidden" name="source" value="{esc(source or C.BIZ + ' demo site')}">
       <input type="hidden" name="_next" value="">
       <input type="hidden" name="landing_page" value="">
@@ -319,7 +319,7 @@ def footer():
   <div class="wrap footer-grid">
     <div class="footer-brand">
       <img src="/assets/img/logo-light.png" alt="{esc(C.BIZ)}" width="2095" height="751" loading="lazy">
-      <p>Handyman work, painting and general remodelling, owner-operated out of
+      <p>Handyman work, painting and general remodeling, owner-operated out of
          {esc(C.HOME_BASE)} and {C.RADIUS_MI} miles around it.</p>
       <a class="btn btn-gold btn-sm" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} {C.PHONE_DISPLAY}</a>
     </div>
@@ -550,7 +550,7 @@ def build_home():
 # -------------------------------------------------------------- services hub
 def build_services_hub():
     html = head(
-        f"What Rick Does — Handyman, Painting & Remodelling | {C.BIZ}",
+        f"What Rick Does — Handyman, Painting & Remodeling | {C.BIZ}",
         f"Everything {C.BIZ} covers: handyman repairs, interior and exterior painting, decks and "
         f"porches, windows and doors, tile and carpet, trim carpentry and room additions.")
     html += nav("services")
@@ -749,7 +749,7 @@ def build_area(town, miles, county, idx):
 <section class="section tight"><div class="wrap split lean">
   <div class="prose reveal">
     <p class="lead">{esc(C.OWNER)} covers {esc(town)} for handyman work, painting and the
-      general repair and remodelling jobs in between.</p>
+      general repair and remodeling jobs in between.</p>
     <p>{dist_line}</p>
     <p>The call that comes in most often from towns like {esc(town)} is not one big project. It
       is a list &mdash; a tap that drips, a door that sticks, a bedroom that has needed painting
@@ -800,7 +800,7 @@ def build_about():
     html = head(
         f"About {C.OWNER} — {C.BIZ}, {C.CITY} {C.STATE_ABBR}",
         f"{C.OWNER} runs {C.BIZ} out of {C.HOME_BASE}. Handyman work, painting and general "
-        f"remodelling, owner-operated, back working in {C.CITY} and building the list back up.")
+        f"remodeling, owner-operated, back working in {C.CITY} and building the list back up.")
     html += nav("about")
     html += page_hero(
         f"About {esc(C.OWNER)}",
@@ -874,7 +874,7 @@ def build_contact():
     html = head(
         f"Contact {C.OWNER} — Free Estimates | {C.BIZ}",
         f"Call or text {C.PHONE_DISPLAY}, or send the form. Free estimates on handyman work, "
-        f"painting and remodelling within {C.RADIUS_MI} miles of {C.HOME_BASE}.")
+        f"painting and remodeling within {C.RADIUS_MI} miles of {C.HOME_BASE}.")
     html += nav("contact")
     html += page_hero(
         "Get a Free Estimate",

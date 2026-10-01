@@ -1,4 +1,4 @@
-/* Killion Remodelling — site behaviour
+/* Killion Remodeling — site behaviour
    Sections 1-7 are the real site. Section 8 is demo-only and is marked
    for deletion at launch (see DEMO-NOTES.md). */
 (function () {
@@ -180,7 +180,7 @@
         '<button class="dm-close" type="button" aria-label="Close">' + ICON_X + "</button>" +
         '<span class="dm-badge">Demo preview</span>' +
         "<h2>This is a demo site</h2>" +
-        "<p>You are looking at a design concept built for <b>Killion Remodelling</b> " +
+        "<p>You are looking at a design concept built for <b>Killion Remodeling</b> " +
         'by <a href="https://60minutesites.com" target="_blank" rel="noopener">60&nbsp;Minute&nbsp;Sites</a>. ' +
         "It is here so Rick can see what his own site would look like before he buys one.</p>" +
         "<p>Two things to know while you click around. The photographs are " +

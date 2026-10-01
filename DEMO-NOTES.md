@@ -1,7 +1,8 @@
-# Killion Remodelling — demo notes
+# Killion Remodeling — demo notes
 
 Read before the call with Rick. Built 30 Sep 2026 from the phone-call notes;
-rebuilt 1 Oct 2026 with Rick's logo and real photography.
+rebuilt 1 Oct 2026 with Rick's logo and real photography, and updated the same
+day when he sent revised logo artwork.
 
 ---
 
@@ -25,12 +26,14 @@ PHONE_TEL     = "3095550100"
 
 and rebuild. It appears on 41 pages and updates everywhere.
 
-### Settled: the name is "Killion Remodelling"
+### Settled: the name is "Killion Remodeling"
 
-The logo Rick supplied spells it **REMODELLING**, two L's, so the earlier
-question about Killion/Killions and Remodeling/Remodelling is answered and the
-whole site now matches the logo. `OWNER_FULL = "Rick Killion"` is still an
-inference from the business name rather than something he confirmed.
+Rick sent two logo files. The first spelled it REMODELLING with two L's; the
+revised artwork spells it **REMODELING**, one L, and that is what the site uses
+now. Worth a sentence on the call — if he has signage, a truck or business cards
+already printed, make sure the site matches those rather than the other way
+round. `OWNER_FULL = "Rick Killion"` is still an inference from the business
+name rather than something he confirmed.
 
 ## 2. What the demo discloses, and where
 
@@ -132,7 +135,7 @@ and takes about ten minutes to wire in.
 - Somewhere quiet. Phone microphones pick up wind and traffic badly; a garage
   with the door shut beats a nice-looking driveway.
 - Open with his name, the business and the town in the first five seconds:
-  *"I'm Rick, I run Killion Remodelling out of Bloomington."*
+  *"I'm Rick, I run Killion Remodeling out of Bloomington."*
 - Say plainly what he does and what he does not. The "I don't do full kitchens
   and bathrooms" line builds more trust than any claim could.
 - Finish by telling people to call, and say the number out loud.
@@ -219,11 +222,21 @@ Each one unlocks something currently missing from the site.
    list it, but it is framed carefully: a written quote, a start date, and
    licensed trades brought in for the parts that need them.
 7. **The palette comes out of his logo**, not out of a template — navy
-   `#012344`, gold `#FBAC18` and rust `#CD3C09` were sampled from the PNG he
+   `#022549`, gold `#FAAB10` and rust `#E43E02` were sampled from the artwork he
    sent, so the site and the logo agree exactly.
 8. **A light version of the logo** (`assets/img/logo-light.png`) was generated
    for the dark footer, because his logo's wordmark is navy and would have
    disappeared on it. `mark.png` is the square icon alone, used as the favicon.
+   Both are derived from `logo.png` — if he sends revised artwork again, drop it
+   in as `logo.png` and regenerate them:
+
+   ```bash
+   cd assets/img
+   magick logo.png -fuzz 24% -fill '#F7F4EF' -opaque '#022549' \
+                   -fuzz 26% -fill '#FAAB10' -opaque '#E43E02' logo-light.png
+   magick logo.png -crop 580x580+0+0 +repage -resize 512x512 \
+                   -background none -gravity center -extent 512x512 mark.png
+   ```
 
 ---
 

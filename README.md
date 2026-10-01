@@ -1,6 +1,6 @@
-# Killion Remodelling — demo site
+# Killion Remodeling — demo site
 
-Rick — handyman, painting and general remodelling. Bloomington, Illinois, working
+Rick — handyman, painting and general remodeling. Bloomington, Illinois, working
 a 50-mile radius. Built by [60 Minute Sites](https://60minutesites.com) as a
 demo, 30 Sep 2026; rebuilt 1 Oct 2026 with Rick's logo and real photography.
 
@@ -27,8 +27,8 @@ assets/img/             logo.png (Rick's), logo-light.png + mark.png (generated)
 
 ## Brand
 
-Taken straight out of the logo Rick supplied: navy `#012344`, gold `#FBAC18`,
-rust `#CD3C09`. `logo-light.png` is a recoloured variant for the dark footer,
+Taken straight out of the logo Rick supplied: navy `#022549`, gold `#FAAB10`,
+rust `#E43E02`. `logo-light.png` is a recoloured variant for the dark footer,
 since the wordmark is navy; `mark.png` is the square icon alone, used as the
 favicon.
 

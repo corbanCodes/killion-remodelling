@@ -7,8 +7,9 @@ before launch.
 """
 
 # ---------------------------------------------------------------- the business
-# Spelling settled by the logo Rick supplied: REMODELLING, two L's.
-BIZ = "Killion Remodelling"
+# Spelling comes from the logo: REMODELING, one L. (An earlier logo file
+# Rick sent spelled it with two; the current artwork is the one that counts.)
+BIZ = "Killion Remodeling"
 BIZ_SHORT = "Killion"
 OWNER = "Rick"
 OWNER_FULL = "Rick Killion"          # PLACEHOLDER — confirm surname spelling

@@ -1,20 +1,20 @@
 /* ============================================================
-   Killion Remodelling — design system
+   Killion Remodeling — design system
    Built on the North Line Property Services system, re-skinned.
    Palette sampled straight out of Rick's logo:
-     Navy #012344 · Gold #FBAC18 · Rust #CD3C09 · Paper #F7F4EF
+     Navy #022549 · Gold #FAAB10 · Rust #E43E02 · Paper #F7F4EF
    Type: Archivo (heads, expanded) · Inter (body)
    ============================================================ */
 
 :root {
-  --navy: #012344;
+  --navy: #022549;
   --navy-mid: #0A3763;
   --navy-deep: #01172D;
   --ink: #0A1420;
-  --gold: #FBAC18;
-  --gold-bright: #FFC048;
-  --rust: #CD3C09;
-  --rust-light: #E25B2A;
+  --gold: #FAAB10;
+  --gold-bright: #FFBE3D;
+  --rust: #E43E02;
+  --rust-light: #F15A28;
   --paper: #F7F4EF;
   --mist: #EBF0F5;
   --white: #FFFFFF;
@@ -105,7 +105,7 @@ p { margin: 0 0 1em; }
 }
 .btn:hover { transform: translateY(-2px); }
 .btn svg { width: 16px; height: 16px; fill: currentColor; flex: none; }
-.btn-gold { background: var(--gold); color: var(--navy); box-shadow: 0 8px 24px rgba(251, 172, 24, 0.36); }
+.btn-gold { background: var(--gold); color: var(--navy); box-shadow: 0 8px 24px rgba(250, 171, 16, 0.36); }
 .btn-gold:hover { background: var(--gold-bright); color: var(--navy); }
 .btn-navy { background: var(--navy); color: #fff; }
 .btn-navy:hover { background: var(--navy-deep); color: #fff; }
@@ -247,7 +247,7 @@ p { margin: 0 0 1em; }
 /* `.main-nav > a` (0,1,1) strips the button's fill and radius — restore them */
 .main-nav > a.btn-gold {
   background: var(--gold); color: var(--navy); border-radius: 999px;
-  box-shadow: 0 8px 22px rgba(251, 172, 24, 0.34);
+  box-shadow: 0 8px 22px rgba(250, 171, 16, 0.34);
 }
 .main-nav > a.btn-gold:hover { background: var(--gold-bright); color: var(--navy); }
 .nav-burger { display: none; background: none; border: 0; cursor: pointer; margin-left: auto; padding: 6px; }
@@ -297,7 +297,7 @@ p { margin: 0 0 1em; }
 .hero h1 { color: #fff; margin-bottom: 18px; text-shadow: 0 2px 30px rgba(1, 23, 45, 0.5); }
 .hero h1 em {
   font-style: normal; color: var(--gold);
-  box-shadow: inset 0 -0.13em 0 rgba(251, 172, 24, 0.3);
+  box-shadow: inset 0 -0.13em 0 rgba(250, 171, 16, 0.3);
 }
 .hero-sub { font-size: clamp(1.06rem, 1.6vw, 1.22rem); color: rgba(255, 255, 255, 0.9); max-width: 560px; margin-bottom: 30px; }
 .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 32px; }
@@ -468,7 +468,7 @@ p { margin: 0 0 1em; }
 .sample-frame {
   border: 2px dashed var(--rust); border-radius: var(--radius-lg);
   padding: clamp(20px, 3vw, 30px); position: relative;
-  background: rgba(205, 60, 9, 0.035);
+  background: rgba(228, 62, 2, 0.035);
 }
 .sample-frame > .sample-label {
   display: inline-flex; align-items: center; gap: 8px;
@@ -538,15 +538,15 @@ p { margin: 0 0 1em; }
 }
 .radius-map .ring {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  border: 1px solid rgba(251, 172, 24, 0.3); border-radius: 50%;
+  border: 1px solid rgba(250, 171, 16, 0.3); border-radius: 50%;
 }
 .radius-map .ring.r1 { width: 32%; height: 32%; }
 .radius-map .ring.r2 { width: 58%; height: 58%; border-style: dashed; }
-.radius-map .ring.r3 { width: 86%; height: 86%; border-color: rgba(251, 172, 24, 0.5); }
+.radius-map .ring.r3 { width: 86%; height: 86%; border-color: rgba(250, 171, 16, 0.5); }
 .radius-map .ring-lbl {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   font-family: var(--head); font-size: 0.6rem; font-weight: 800;
-  letter-spacing: 0.1em; color: rgba(251, 172, 24, 0.85);
+  letter-spacing: 0.1em; color: rgba(250, 171, 16, 0.85);
   background: var(--navy-deep); padding: 2px 7px; border-radius: 4px;
 }
 .radius-map .hub {
@@ -555,7 +555,7 @@ p { margin: 0 0 1em; }
 }
 .radius-map .hub-dot {
   display: block; width: 15px; height: 15px; border-radius: 50%; background: var(--gold);
-  margin: 0 auto 8px; box-shadow: 0 0 0 7px rgba(251, 172, 24, 0.22), 0 0 0 15px rgba(251, 172, 24, 0.1);
+  margin: 0 auto 8px; box-shadow: 0 0 0 7px rgba(250, 171, 16, 0.22), 0 0 0 15px rgba(250, 171, 16, 0.1);
 }
 .radius-map .hub b { font-family: var(--head); font-size: 0.98rem; font-weight: 900; display: block; letter-spacing: 0.02em; }
 .radius-map .hub span { font-size: 0.72rem; color: rgba(255, 255, 255, 0.6); letter-spacing: 0.08em; text-transform: uppercase; }
@@ -618,7 +618,7 @@ p { margin: 0 0 1em; }
 .hero-card .svc-checks .svc-check:has(input:checked),
 .on-ink .svc-checks .svc-check:has(input:checked),
 .on-navy .svc-checks .svc-check:has(input:checked) {
-  border-color: var(--gold); background: rgba(251, 172, 24, 0.16); color: var(--gold);
+  border-color: var(--gold); background: rgba(250, 171, 16, 0.16); color: var(--gold);
 }
 
 /* ------------------------------------------------ contact channels */
