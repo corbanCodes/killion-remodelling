@@ -1,31 +1,11 @@
-# Killion Remodeling — demo notes
+# Killion Remodelling — demo notes
 
-Read before the call with Rick. Built 30 Sep 2026 from the phone-call notes.
+Read before the call with Rick. Built 30 Sep 2026 from the phone-call notes;
+rebuilt 1 Oct 2026 with Rick's logo and real photography.
 
 ---
 
-## 1. Two things to confirm before you show him anything
-
-### The business name spelling
-
-The call notes say **"KILLIONS REMODELLING"**. The repo is `killion-remodelling`.
-The site currently says **"Killion Remodeling"** (US spelling, no S).
-
-Three plausible spellings and only one is his. Ask him on the call, then change
-**two lines** in `_generator/content.py` and rebuild:
-
-```python
-BIZ = "Killion Remodeling"
-BIZ_SHORT = "Killion"
-```
-
-The logo is SVG text, so it also needs a one-word edit in
-`assets/img/logo.svg` and `assets/img/logo-light.svg` if the spelling changes.
-
-`OWNER_FULL = "Rick Killion"` is an assumption too — his surname was never
-actually confirmed on the call.
-
-### The phone number — this is the real blocker
+## 1. One thing still blocking — the phone number
 
 **Rick never gave a phone number.** A lead-generation site for a handyman with
 no phone number on it is the one thing that stops the whole thing working, and
@@ -43,25 +23,31 @@ PHONE_DISPLAY = "(309) 555-0100"
 PHONE_TEL     = "3095550100"
 ```
 
-and rebuild. It appears in 40 pages and updates everywhere.
+and rebuild. It appears on 41 pages and updates everywhere.
 
----
+### Settled: the name is "Killion Remodelling"
+
+The logo Rick supplied spells it **REMODELLING**, two L's, so the earlier
+question about Killion/Killions and Remodeling/Remodelling is answered and the
+whole site now matches the logo. `OWNER_FULL = "Rick Killion"` is still an
+inference from the business name rather than something he confirmed.
 
 ## 2. What the demo discloses, and where
 
 Nothing on this site pretends to be real. Every stand-in is labelled.
 
-- **Demo banner** on all 40 pages. On phones it collapses to
+- **Demo banner** on all 41 pages. On phones it collapses to
   `DEMO PREVIEW [What's this?]`; the button re-opens the modal any time.
 - **Pop-up modal** on first visit per browser session (1.1s delay, dismissible,
-  Escape closes it). It says who built it, that the photos are placeholders,
-  and that the forms go to 60MS rather than to Rick.
-- **Footer block** on every page repeating all of that.
+  Escape closes it). It says who built it, that the photographs are library
+  images, and that the forms go to 60MS rather than to Rick.
+- **Footer block** on every page repeating all of that, with a link to
+  `credits.html`, which lists every photograph and its photographer.
 - **Every form** carries a visible note: *"while this site is a demo, everything
   sent through this form goes to 60 Minute Sites — not to Rick."*
 - **thank-you.html** repeats it after a submission, so nobody walks away
   thinking Rick got their message.
-- **noindex, nofollow** on all 40 pages, `robots.txt` disallows everything, and
+- **noindex, nofollow** on all 41 pages, `robots.txt` disallows everything, and
   `netlify.toml` sets `X-Robots-Tag: noindex`. Three layers, because this demo
   must never outrank whatever Rick eventually launches.
 
@@ -92,37 +78,40 @@ form with that service already ticked.
 
 ---
 
-## 4. There are no photographs, and that is on purpose
+## 4. The photographs
 
-Rick sent none. Rather than fill the site with library photos of other people's
-houses — which customers spot instantly — **every image slot is a labelled
-placeholder naming the shot it wants.**
+The site ships with **22 library photographs** from
+[Unsplash](https://unsplash.com), used under the Unsplash licence, which permits
+commercial use without attribution. Every one is credited on `credits.html`
+anyway, and the footer, the demo banner and the demo pop-up all say plainly that
+they are stand-ins.
 
-`gallery.html` is the whole shot list laid out as a page. Show him that page on
-the call; it turns "send me some photos" into a concrete list of 16.
+**They are not photographs of Rick's work, and the site says so.** Replacing one
+is a single file drop: same filename, same folder (`assets/img/photos/`), no
+code change. The alt text lives in `PHOTOS` in `_generator/content.py` and
+should be updated alongside.
 
-The eight that matter most, in order:
+Swapping in his own photos is the single biggest upgrade available, and the
+eight that earn their place first are:
 
-1. **Rick actually working** — brush in hand, on a ladder, measuring. A face
-   shot does more than the other fifteen combined.
-2. Two or three painted rooms, shot from a corner with the blinds open.
-3. A before/after pair taken from the *same spot*.
-4. A finished deck, shot low along the boards.
-5. A new window from inside, a new door from outside.
-6. A tile floor or backsplash, taken from low down.
-7. A close-up of trim or a built-in.
-8. The van with a ladder on it.
+1. **Rick actually working** — replaces `rick-at-work.jpg`, which appears on the
+   homepage and as the About hero. A real face does more than the other seven
+   combined.
+2. A painted room — `painted-room.jpg`.
+3. Two people painting / a room mid-job — `painting-interior.jpg`.
+4. A finished deck — `deck-finished.jpg`.
+5. A new window fitted — `window-install.jpg`.
+6. A repair clearly finished — `handyman-repair.jpg`.
+7. Flooring going down — `flooring-plank.jpg`.
+8. Trim or a door casing being fitted — `trim-work.jpg`.
 
 Shooting notes for him: morning or late afternoon rather than midday, stand
 square on, hold the phone still, and take the *before* photo before starting —
 that is the one people always forget and it is worth as much as the after.
 
-Eight photos is enough to launch. Sixteen fills the site.
-
-Replacing a slot is one line: swap the `.ph` div for
-`<img src="/assets/img/whatever.jpg" alt="...">`. Nothing else changes.
-
----
+The hero image (`hero.jpg`) is the one that sets the tone for the whole site, so
+it is worth a deliberate shot rather than a grab: him on a ladder or at a house,
+in good light, with room on the left of frame for the headline to sit.
 
 ## 5. The video — his question about dos and don'ts
 
@@ -130,7 +119,10 @@ He asked on the call about doing a video explaining what he does. He is right
 that it would help: for a one-man trade with no reviews yet, sixty seconds of
 the actual person is the single strongest trust signal available.
 
-There are two slots waiting for it, on the homepage and on `about.html`.
+**There is no video placeholder on the site** — it is built to look finished
+rather than to look like it is waiting for things. If Rick does shoot one, it
+drops into the homepage (under the "New to You" section) or onto `about.html`,
+and takes about ten minutes to wire in.
 
 **Do:**
 
@@ -140,7 +132,7 @@ There are two slots waiting for it, on the homepage and on `about.html`.
 - Somewhere quiet. Phone microphones pick up wind and traffic badly; a garage
   with the door shut beats a nice-looking driveway.
 - Open with his name, the business and the town in the first five seconds:
-  *"I'm Rick, I run Killion Remodeling out of Bloomington."*
+  *"I'm Rick, I run Killion Remodelling out of Bloomington."*
 - Say plainly what he does and what he does not. The "I don't do full kitchens
   and bathrooms" line builds more trust than any claim could.
 - Finish by telling people to call, and say the number out loud.
@@ -188,11 +180,10 @@ Each one unlocks something currently missing from the site.
 | What | Why it matters |
 |---|---|
 | **Cell number** | Blocking. Nothing works without it. |
-| **Name spelling** | Blocking. Confirm Killion/Killions, Remodeling/Remodelling. |
 | **Licence number and insurance** | Deliberately claimed nowhere right now. Every serious competitor prints theirs. Cheapest trust upgrade available. |
 | **Google Business Profile** | Free, and the main way a local handyman gets found. Unlocks the reviews page and the map pack. |
-| **8–16 photos** | See §4. The gallery page is the ask, already written out. |
-| **The intro video** | See §5. |
+| **His own photos** | See §4. Eight replaces the ones that matter most; the filenames are listed. |
+| **An intro video** | Optional, but strong. See §5. |
 | **Years in the trade** | Deliberately not claimed, because the call notes do not say. "20 years' experience" is worth a lot and costs nothing — if it is true. |
 | **Any workmanship warranty** | Even one year. Cheap, and nobody else in this trade prints one. |
 | **A branded email** | `0507cubbies@gmail.com` is his real address and it works, but `rick@killionremodeling.com` reads very differently on an invoice. |
@@ -227,6 +218,12 @@ Each one unlocks something currently missing from the site.
 6. **Seven service pages.** Room additions is included because the call notes
    list it, but it is framed carefully: a written quote, a start date, and
    licensed trades brought in for the parts that need them.
+7. **The palette comes out of his logo**, not out of a template — navy
+   `#012344`, gold `#FBAC18` and rust `#CD3C09` were sampled from the PNG he
+   sent, so the site and the logo agree exactly.
+8. **A light version of the logo** (`assets/img/logo-light.png`) was generated
+   for the dark footer, because his logo's wordmark is navy and would have
+   disappeared on it. `mark.png` is the square icon alone, used as the favicon.
 
 ---
 
@@ -238,18 +235,20 @@ python3 _generator/build.py
 ```
 
 Everything a human edits lives in **`_generator/content.py`** — the phone
-number, the name, the service copy, the FAQs, the town list, the shot list.
-`build.py` only turns it into HTML. The design system is
-`assets/css/main.css` and the behaviour is `assets/js/main.js`.
+number, the name, the service copy, the FAQs, the town list, and the photo
+list with its alt text. `build.py` only turns it into HTML. The design system
+is `assets/css/main.css` and the behaviour is `assets/js/main.js`.
 
 **To go live:**
 
-1. Real phone number and confirmed name in `content.py`.
+1. Real phone number in `content.py`.
 2. Point the forms at Rick's inbox in `quote_form()` and delete the demo
    `form-note` paragraph.
 3. Delete the demo banner (`head()`), the footer demo block (`footer()`), and
-   section 7 of `assets/js/main.js` — all three are marked with `DEMO` comments.
+   section 8 of `assets/js/main.js` — all three are marked with `DEMO` comments.
 4. Remove `noindex, nofollow` from `head()`, open up `robots.txt`, and drop the
    `X-Robots-Tag` header from `netlify.toml`.
-5. Drop the real photos into `assets/img/` and swap out the `.ph` divs.
+5. Swap whatever photographs Rick has supplied into `assets/img/photos/`, keeping
+   the filenames, and update their alt text in `PHOTOS`. Delete `credits.html`
+   and its links once none of the library images are left.
 6. Rebuild, then submit the sitemap and wire up the Google Business Profile.

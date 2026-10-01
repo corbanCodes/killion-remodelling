@@ -7,10 +7,8 @@ before launch.
 """
 
 # ---------------------------------------------------------------- the business
-# PLACEHOLDER — spelling. Phone notes said "KILLIONS REMODELLING"; the repo is
-# killion-remodelling. Using the US spelling. Confirm with Rick, then change
-# these two lines only.
-BIZ = "Killion Remodeling"
+# Spelling settled by the logo Rick supplied: REMODELLING, two L's.
+BIZ = "Killion Remodelling"
 BIZ_SHORT = "Killion"
 OWNER = "Rick"
 OWNER_FULL = "Rick Killion"          # PLACEHOLDER — confirm surname spelling
@@ -569,43 +567,62 @@ GENERAL_FAQS = [
      "need and you will get a straight answer back."),
 ]
 
-# ---------------------------------------------------------------- photo slots
-# Every image on the site is one of these. The caption is the shot Rick needs
-# to take. Replacing a slot with a real photo is a one-line edit.
-#   key: (aspect class, label, what to shoot)
-SHOT_LIST = [
-    ("rick-at-work", "r43", "Rick on a job",
-     "Rick working — brush in hand, on a ladder, measuring. A face shot matters more than "
-     "anything else on this site."),
-    ("painting-after", "r43", "Freshly painted room",
-     "A room right after painting. Shot from a corner, blinds open, nothing on the floor."),
-    ("painting-before-after", "r32", "Paint before and after",
-     "Same corner of the same room, before and after. Stand in the same spot both times."),
-    ("exterior-paint", "r43", "Exterior paint job",
-     "A whole house or a repainted front door and trim, taken from across the street."),
-    ("handyman-fix", "r43", "A finished repair",
-     "A repair that is clearly done — new trim in place, a door that shuts, a tidy patch painted in."),
-    ("deck-finished", "r43", "Finished deck",
-     "A deck after new boards and stain, taken low and along the boards to show the lines."),
-    ("deck-repair", "r32", "Deck repair in progress",
-     "Boards up, joists visible, new timber going in. Progress shots sell the work."),
-    ("window-install", "r43", "New window fitted",
-     "A new window from inside, trimmed out, with daylight coming through it."),
-    ("door-install", "r43", "New exterior door",
-     "A new front or storm door from outside, square on, in good daylight."),
-    ("tile-floor", "r43", "Tile floor",
-     "A finished tile floor or backsplash. Get down low so the grout lines run away from camera."),
-    ("carpet-room", "r43", "New carpet",
-     "A room with fresh carpet, taken from the doorway with the light behind you."),
-    ("trim-detail", "r11", "Trim close-up",
-     "A close-up of a mitre, a piece of crown or a baseboard run. Detail shots prove care."),
-    ("builtin", "r43", "A built-in",
-     "Shelving, a bench or a closet build-out, shot straight on."),
-    ("addition", "r32", "An addition or finished basement",
-     "The finished space, taken from a corner so the whole room reads."),
-    ("van", "r169", "The van or truck",
-     "His vehicle with a ladder on it, parked outside a house. Makes the business feel real."),
-    ("tools", "r11", "Tools laid out",
-     "A clean shot of his tools or a loaded van. Good filler and it reads as professional."),
+# -------------------------------------------------------------------- photos
+# Library photographs standing in until Rick sends his own. Sources and
+# licence are on credits.html and in DEMO-NOTES.md.
+#   key: (file, alt text)
+PHOTOS = {
+    "hero":              ("hero.jpg", "A painter on a ladder working along the upper siding of a grey house against a blue sky"),
+    "rick-at-work":      ("rick-at-work.jpg", "A tradesman in a tool belt reaching into an open tool case on a job"),
+    "painting-interior": ("painting-interior.jpg", "Two people rolling fresh paint onto the walls of a bright empty room"),
+    "painting-detail":   ("painting-detail.jpg", "A hand cutting in a door frame with a paint brush"),
+    "painting-exterior": ("painting-exterior.jpg", "A painter working between two ladders on the wooden siding of a house"),
+    "painted-room":      ("painted-room.jpg", "A freshly painted room with white walls, exposed beams and a wood floor"),
+    "handyman-repair":   ("handyman-repair.jpg", "An old window being repaired, with a hammer and drill resting on the sill"),
+    "tools":             ("tools.jpg", "Hand tools laid out on a workbench"),
+    "deck-finished":     ("deck-finished.jpg", "A finished raised deck with black railings on the back of a brick house"),
+    "deck-repair":       ("deck-repair.jpg", "A hammer driving a nail into a deck board"),
+    "deck-build":        ("deck-build.jpg", "A tape measure held across a length of fresh timber"),
+    "window-install":    ("window-install.jpg", "A new window set into an opening, still part-wrapped in protective film"),
+    "window-work":       ("window-work.jpg", "A fitter in a cap working on the frame of a large window"),
+    "door-exterior":     ("door-exterior.jpg", "A grey house with white porch columns, white trim and a wooden front door"),
+    "flooring-plank":    ("flooring-plank.jpg", "Hands laying a plank of dark wood flooring into place"),
+    "carpet-room":       ("carpet-room.jpg", "An empty room with new carpet and freshly painted white walls"),
+    "tile-detail":       ("tile-detail.jpg", "A brass valve set into a wall of white subway tile"),
+    "trim-work":         ("trim-work.jpg", "A carpenter kneeling to drill into a door casing"),
+    "trim-saw":          ("trim-saw.jpg", "A mitre saw surrounded by offcuts of trim"),
+    "carpentry-mark":    ("carpentry-mark.jpg", "Hands marking a cut line on a board with a pencil"),
+    "living-room":       ("living-room.jpg", "A finished living room with a wood stove, pale walls and large windows"),
+    "room-bright":       ("room-bright.jpg", "A bright living room with a fireplace and tall windows either side"),
+}
+
+# the gallery, in display order
+GALLERY = [
+    "rick-at-work", "painting-interior", "painted-room", "deck-finished",
+    "handyman-repair", "window-install", "flooring-plank", "trim-work",
+    "painting-exterior", "carpet-room", "tile-detail", "deck-repair",
+    "painting-detail", "door-exterior", "trim-saw", "living-room",
+    "carpentry-mark", "window-work", "room-bright", "deck-build", "tools",
 ]
-SHOT_BY_KEY = {s[0]: s for s in SHOT_LIST}
+
+# main photo + supporting photos per service page
+SERVICE_PHOTOS = {
+    "handyman":       ("handyman-repair", ["tools", "rick-at-work"]),
+    "painting":       ("painting-interior", ["painting-detail", "painted-room", "painting-exterior"]),
+    "decks-porches":  ("deck-finished", ["deck-repair", "deck-build"]),
+    "windows-doors":  ("window-install", ["window-work", "door-exterior"]),
+    "flooring":       ("flooring-plank", ["tile-detail", "carpet-room"]),
+    "trim-carpentry": ("trim-work", ["trim-saw", "carpentry-mark"]),
+    "room-additions": ("living-room", ["room-bright", "carpentry-mark"]),
+}
+
+# card image per service, for the grids
+SERVICE_CARD_PHOTO = {
+    "handyman": "handyman-repair",
+    "painting": "painting-interior",
+    "decks-porches": "deck-finished",
+    "windows-doors": "window-install",
+    "flooring": "flooring-plank",
+    "trim-carpentry": "trim-work",
+    "room-additions": "living-room",
+}

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Killion Remodeling — demo-site generator.
+"""Killion Remodelling — site generator.
 
 Reads content.py and writes the whole static site into the repo root.
 Run:  python3 _generator/build.py
 
-Design system is the North Line Property Services system, re-skinned navy and
-amber. The site ships with no client photographs: every image is a labelled
-.ph placeholder naming the shot it wants (see content.SHOT_LIST).
+Design system is the North Line Property Services system, re-skinned to the
+navy/gold/rust taken straight out of Rick's logo.
 """
+import json
 import re
 import shutil
 from pathlib import Path
@@ -16,6 +16,8 @@ import content as C
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
+PHOTO_DIR = ROOT / "assets" / "img" / "photos"
+
 
 # ------------------------------------------------------------------- helpers
 def esc(s):
@@ -49,8 +51,6 @@ ICONS = dict(
     cal='<svg viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/></svg>',
     person='<svg viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2 3a2 2 0 0 1 2 2v1H4v-1a2 2 0 0 1 2-2zM8 9a5 5 0 0 0-5 5v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a5 5 0 0 0-5-5"/></svg>',
     wallet='<svg viewBox="0 0 16 16"><path d="M0 3a2 2 0 0 1 2-2h11.5a.5.5 0 0 1 0 1H15a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.5h13V3a1 1 0 0 0-1-1zm10.5 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/></svg>',
-    camera='<svg viewBox="0 0 16 16"><path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4z"/><path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/></svg>',
-    video='<svg viewBox="0 0 16 16"><path d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2z"/></svg>',
     wrench='<svg viewBox="0 0 16 16"><path d="M.102 2.223A3.004 3.004 0 0 0 3.78 5.897l6.341 6.252A3.003 3.003 0 0 0 13 16a3 3 0 1 0-.851-5.878L5.897 3.781A3.004 3.004 0 0 0 2.223.1l2.141 2.142L4 4l-1.757.364zm13.37 9.019.528.026.287.445.445.287.026.529L15 13l-.242.471-.026.529-.445.287-.287.445-.529.026L13 15l-.471-.242-.529-.026-.287-.445-.445-.287-.026-.529L11 13l.242-.471.026-.529.445-.287.287-.445.529-.026L13 11z"/></svg>',
     roller='<svg viewBox="0 0 16 16"><path d="M2 1.5A1.5 1.5 0 0 1 3.5 0h9A1.5 1.5 0 0 1 14 1.5v3A1.5 1.5 0 0 1 12.5 6H10v1.5A1.5 1.5 0 0 1 8.5 9H8v1.5a1.5 1.5 0 0 1-1 1.415V15a1 1 0 1 1-2 0v-3.085A1.5 1.5 0 0 1 4 10.5V9h-.5A1.5 1.5 0 0 1 2 7.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/></svg>',
     deck='<svg viewBox="0 0 16 16"><path d="M1 3h14v1.5H1zM1 6h14v1.5H1zM1 9h14v1.5H1zM2.5 11.5H4V16H2.5zM12 11.5h1.5V16H12z"/></svg>',
@@ -58,8 +58,8 @@ ICONS = dict(
     tile='<svg viewBox="0 0 16 16"><path d="M1 1h6.3v6.3H1zM8.7 1H15v6.3H8.7zM1 8.7h6.3V15H1zM8.7 8.7H15V15H8.7z"/></svg>',
     saw='<svg viewBox="0 0 16 16"><path d="M0 4.5 1.8 6l1.4-1.5L4.6 6 6 4.5 7.4 6l1.4-1.5L10.2 6l1.4-1.5L13 6l1.5-1.5V8H0zM0 9h15v2a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1z"/></svg>',
     house='<svg viewBox="0 0 16 16"><path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 0-.5.5v1.293zM2.5 14a1 1 0 0 0 1 1h3v-4h3v4h3a1 1 0 0 0 1-1V9.5L8 3.5 2.5 9z"/></svg>',
-    clock='<svg viewBox="0 0 16 16"><path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/></svg>',
     hand='<svg viewBox="0 0 16 16"><path d="M8 1a.5.5 0 0 1 .5.5v5a.5.5 0 0 0 1 0V2a.5.5 0 0 1 1 0v4.5a.5.5 0 0 0 1 0V3.5a.5.5 0 0 1 1 0V9a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V6.5a.5.5 0 0 1 1 0V9a.5.5 0 0 0 1 0V2.5a.5.5 0 0 1 1 0v4a.5.5 0 0 0 1 0v-5A.5.5 0 0 1 8 1"/></svg>',
+    zoom='<svg viewBox="0 0 16 16"><path d="M6.5 1a5.5 5.5 0 1 0 3.473 9.77l3.628 3.63a.75.75 0 1 0 1.061-1.06l-3.629-3.63A5.5 5.5 0 0 0 6.5 1m-4 5.5a4 4 0 1 1 8 0 4 4 0 0 1-8 0"/><path d="M6.5 3.75a.5.5 0 0 1 .5.5V6h1.75a.5.5 0 0 1 0 1H7v1.75a.5.5 0 0 1-1 0V7H4.25a.5.5 0 0 1 0-1H6V4.25a.5.5 0 0 1 .5-.5"/></svg>',
 )
 
 
@@ -68,14 +68,23 @@ def stars():
 
 
 # ----------------------------------------------------------------- components
-def ph(key, extra_cls="", ratio=None):
-    """A labelled photo placeholder. Delete these when real photos land."""
-    _k, ratio_default, label, caption = C.SHOT_BY_KEY[key]
-    r = ratio or ratio_default
-    cls = " ".join(x for x in ["ph", r, extra_cls] if x)
-    return (f'<div class="{cls}" role="img" aria-label="Placeholder for a photo: {esc(caption)}">'
-            f'{ICONS["camera"]}<b>Photo &mdash; {esc(label)}</b>'
-            f'<span>{esc(caption)}</span></div>')
+def img(key, cls="", lazy=True):
+    """A real photograph from assets/img/photos."""
+    f, alt = C.PHOTOS[key]
+    attrs = f' class="{cls}"' if cls else ""
+    ld = ' loading="lazy" decoding="async"' if lazy else ' fetchpriority="high"'
+    return f'<img src="/assets/img/photos/{f}" alt="{esc(alt)}"{attrs}{ld}>'
+
+
+def figure(key, cls=""):
+    return f'<figure class="shot {cls}">{img(key)}</figure>'
+
+
+def gal_item(key, group="all"):
+    f, alt = C.PHOTOS[key]
+    return (f'    <a class="gal-item reveal" href="/assets/img/photos/{f}" '
+            f'data-lightbox="{group}" data-cap="{esc(alt)}" aria-label="{esc(alt)}">'
+            f'{img(key)}<span class="gal-zoom">{ICONS["zoom"]}</span></a>')
 
 
 def check_list(items, cls="check-list"):
@@ -84,20 +93,20 @@ def check_list(items, cls="check-list"):
 
 
 def faq_block(faqs):
-    out = []
-    for q, a in faqs:
-        out.append(f'''<details class="faq"><summary>{esc(q)}{PLUS}</summary>
-  <div class="faq-body"><p>{esc(a)}</p></div></details>''')
-    return "\n".join(out)
+    return "\n".join(
+        f'<details class="faq"><summary>{esc(q)}{PLUS}</summary>\n'
+        f'  <div class="faq-body"><p>{esc(a)}</p></div></details>'
+        for q, a in faqs)
 
 
 def service_card(s):
+    key = C.SERVICE_CARD_PHOTO[s["slug"]]
     return f'''<a class="card reveal" href="/services/{s["slug"]}.html">
-  <div class="card-cap">
-    <span class="cap-ico">{ICONS[s["ico"]]}</span>
-    <span><small>{esc(s["kicker"])}</small><h3>{esc(s["short"])}</h3></span>
-  </div>
+  <div class="card-img">{img(key)}
+    <span class="card-ico">{ICONS[s["ico"]]}</span></div>
   <div class="card-body">
+    <small class="card-kicker">{esc(s["kicker"])}</small>
+    <h3>{esc(s["short"])}</h3>
     <p>{esc(s["blurb"])}</p>
     <span class="card-link">What this covers {ARROW}</span>
   </div></a>'''
@@ -138,23 +147,9 @@ def pricing_table():
   </tbody></table></div>'''
 
 
-def video_slot():
-    return f'''<div class="video-slot reveal">
-  <div class="ph r916 on-dark" role="img" aria-label="Placeholder for Rick's introduction video">
-    {ICONS["video"]}<b>Video &mdash; Rick introduces himself</b>
-    <span>A phone-shot clip of {C.OWNER} saying who he is, what he does and where he works.
-      Shooting notes are in DEMO-NOTES.md.</span>
-  </div>
-</div>'''
-
-
 # ---------------------------------------------------------------------- forms
 def quote_form(form_id="quote", compact=False, minimal=False, source="", preselect=""):
-    """The 60 Minute Sites intake form. Posts to 60MS, not to Rick — see the note.
-
-    minimal — four fields and a one-line brief (the homepage hero card).
-    compact — full field set, no long message box (area pages).
-    """
+    """The 60 Minute Sites intake form. Posts to 60MS, not to Rick — see the note."""
     if minimal:
         boxes_block = f'''
       <div class="field full"><label for="{form_id}-msg">What do you need doing?</label>
@@ -174,6 +169,7 @@ def quote_form(form_id="quote", compact=False, minimal=False, source="", presele
     msg = "" if (compact or minimal) else f'''
       <div class="field full"><label for="{form_id}-msg">Anything else worth knowing?</label>
         <textarea id="{form_id}-msg" name="message" placeholder="A list is fine. Rooms, sizes, how soon you need it &mdash; whatever you know."></textarea></div>'''
+
     return f'''<form id="{form_id}" class="form-grid" action="{C.FORM_ACTION}" method="POST" data-hq-form>
       <div class="field"><label for="{form_id}-name">Your name <span class="req">*</span></label>
         <input id="{form_id}-name" name="name" type="text" autocomplete="name" placeholder="Full name" required></div>
@@ -184,7 +180,7 @@ def quote_form(form_id="quote", compact=False, minimal=False, source="", presele
       <div class="field"><label for="{form_id}-town">Town</label>
         <input id="{form_id}-town" name="full_address" type="text" autocomplete="address-level2" placeholder="{esc(C.CITY)}, {C.STATE_ABBR}"></div>{boxes_block}{msg}
       <input type="hidden" name="business" value="{esc(C.BIZ)}">
-      <input type="hidden" name="business_type" value="Handyman, painting &amp; general remodeling">
+      <input type="hidden" name="business_type" value="Handyman, painting &amp; general remodelling">
       <input type="hidden" name="source" value="{esc(source or C.BIZ + ' demo site')}">
       <input type="hidden" name="_next" value="">
       <input type="hidden" name="landing_page" value="">
@@ -194,7 +190,7 @@ def quote_form(form_id="quote", compact=False, minimal=False, source="", presele
       <input type="hidden" name="utm_content" value="">
       <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="field full">
-        <button class="btn btn-amber btn-block" type="submit">Send it to {esc(C.OWNER)} {ARROW}</button>
+        <button class="btn btn-gold btn-block" type="submit">Send it to {esc(C.OWNER)} {ARROW}</button>
         <p class="form-note"><b>Demo note:</b> while this site is a demo, everything sent through
           this form goes to <a href="{C.SIXTYMS_URL}" target="_blank" rel="noopener">60&nbsp;Minute&nbsp;Sites</a>
           &mdash; not to {esc(C.OWNER)}. Forms get pointed at his own inbox once the site is paid
@@ -204,7 +200,8 @@ def quote_form(form_id="quote", compact=False, minimal=False, source="", presele
 
 
 # --------------------------------------------------------------- page chrome
-def head(title, desc, canonical=""):
+def head(title, desc):
+    f, _alt = C.PHOTOS["hero"]
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -216,8 +213,10 @@ def head(title, desc, canonical=""):
 <meta property="og:type" content="website">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(desc)}">
-<meta name="theme-color" content="#13304F">
-<link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg">
+<meta property="og:image" content="/assets/img/photos/{f}">
+<meta name="theme-color" content="#012344">
+<link rel="icon" type="image/png" href="/assets/img/mark.png">
+<link rel="apple-touch-icon" href="/assets/img/mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -225,12 +224,12 @@ def head(title, desc, canonical=""):
 </head>
 <body>
 
-<!-- DEMO — delete this div, the .footer-demo block, section 7 of main.js and
+<!-- DEMO — delete this div, the .footer-demo block, section 8 of main.js and
      the .demo-bar/.demo-modal CSS when the site goes live. -->
 <div class="demo-bar"><span class="demo-dot"></span><strong>DEMO PREVIEW</strong><span
   class="demo-tail"> &mdash; a design concept for {esc(C.BIZ)} by
   <a href="{C.SIXTYMS_URL}" target="_blank" rel="noopener">60&nbsp;Minute&nbsp;Sites</a>
-  &middot; photos are placeholders and all forms go to 60MS, not to {esc(C.OWNER)}</span>
+  &middot; stand-in photography &middot; all forms go to 60MS, not to {esc(C.OWNER)}</span>
   <button type="button" data-demo-open>What&rsquo;s this?</button></div>
 '''
 
@@ -245,14 +244,14 @@ def nav(active=""):
     return f'''
 <div class="util-bar"><div class="wrap">
   <a href="tel:{C.PHONE_TEL}">{ICONS["phone"]} {C.PHONE_DISPLAY}</a>
-  <span class="util-hide">{ICONS["pin"]} {esc(C.RADIUS_MI and str(C.RADIUS_MI))} miles around {esc(C.HOME_BASE)}</span>
+  <span class="util-hide">{ICONS["pin"]} {C.RADIUS_MI} miles around {esc(C.HOME_BASE)}</span>
   <span class="util-spacer"></span>
   <a class="util-hide" href="mailto:{C.EMAIL}">{ICONS["mail"]} {C.EMAIL}</a>
 </div></div>
 
 <header class="site-header"><div class="wrap nav-row">
-  <a class="brand" href="/index.html">
-    <img src="/assets/img/logo.svg" alt="{esc(C.BIZ)}" width="268" height="96">
+  <a class="brand" href="/index.html" aria-label="{esc(C.BIZ)} &mdash; home">
+    <img src="/assets/img/logo.png" alt="{esc(C.BIZ)}" width="2095" height="751">
   </a>
   <button class="nav-burger" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 16 16"><path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/></svg></button>
   <nav class="main-nav">
@@ -267,20 +266,22 @@ def nav(active=""):
     <a href="/reviews.html"{cls("reviews")}>Reviews</a>
     <a href="/about.html"{cls("about")}>About Rick</a>
     <a href="/contact.html"{cls("contact")}>Contact</a>
-    <a href="/contact.html#quote" class="btn btn-amber btn-sm nav-cta">Get a Free Estimate</a>
+    <a href="/contact.html#quote" class="btn btn-gold btn-sm nav-cta">Free Estimate</a>
   </nav>
 </div></header>
 '''
 
 
-def page_hero(h1, p, crumbs=None):
+def page_hero(h1, p, crumbs=None, photo="rick-at-work"):
     cr = ""
     if crumbs:
         parts = [f'<a href="{href}">{esc(label)}</a>' if href else esc(label)
                  for label, href in crumbs]
         cr = f'<div class="crumbs">{" / ".join(parts)}</div>'
     return f'''
-<section class="page-hero"><div class="wrap">
+<section class="page-hero">
+  <div class="hero-media">{img(photo, lazy=False)}</div>
+  <div class="wrap">
   {cr}
   <h1>{h1}</h1>
   <p>{p}</p>
@@ -288,18 +289,20 @@ def page_hero(h1, p, crumbs=None):
 '''
 
 
-def cta_band(h=None, p=None):
+def cta_band(h=None, p=None, photo="painting-exterior"):
     h = h or f"Get {C.OWNER} to Come and Look"
     p = p or ("Free estimates on anything beyond a small repair, a straight price, and the "
               "person who quotes it is the person who does the work.")
     return f'''
-<section class="section on-ink cta-band"><div class="wrap reveal">
+<section class="section cta-band">
+  <div class="hero-media">{img(photo)}</div>
+  <div class="wrap reveal">
   <span class="eyebrow">Free estimates</span>
   <h2>{esc(h)}</h2>
   <p>{esc(p)}</p>
   <div class="hero-ctas">
-    <a class="btn btn-amber" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} Call {C.PHONE_DISPLAY}</a>
-    <a class="btn btn-ghost" href="/contact.html#quote">Send the form instead</a>
+    <a class="btn btn-gold btn-lg" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} Call {C.PHONE_DISPLAY}</a>
+    <a class="btn btn-ghost btn-lg" href="/contact.html#quote">Send the form instead</a>
   </div>
 </div></section>
 '''
@@ -315,9 +318,10 @@ def footer():
 <footer class="site-footer">
   <div class="wrap footer-grid">
     <div class="footer-brand">
-      <img src="/assets/img/logo-light.svg" alt="{esc(C.BIZ)}" width="268" height="96">
-      <p>Handyman work, painting and general remodeling, owner-operated out of
+      <img src="/assets/img/logo-light.png" alt="{esc(C.BIZ)}" width="2095" height="751" loading="lazy">
+      <p>Handyman work, painting and general remodelling, owner-operated out of
          {esc(C.HOME_BASE)} and {C.RADIUS_MI} miles around it.</p>
+      <a class="btn btn-gold btn-sm" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} {C.PHONE_DISPLAY}</a>
     </div>
     <div><h4>What Rick Does</h4><ul class="footer-links">
 {svc}
@@ -344,14 +348,16 @@ def footer():
   <!-- DEMO — delete this block when the site goes live. -->
   <div class="wrap footer-demo"><b>This is a demo site.</b> It was built by
     <a href="{C.SIXTYMS_URL}" target="_blank" rel="noopener">60 Minute Sites</a> to show
-    {esc(C.OWNER)} what his own site could look like. Every photo slot is a labelled
-    placeholder, there are no customer reviews on it yet, and
+    {esc(C.OWNER)} what his own site could look like. The photographs are
+    <a href="/credits.html">library images</a> standing in until his own are taken, there are no
+    customer reviews on it yet, and
     <b>every form submits to 60 Minute Sites rather than to {esc(C.OWNER)}</b> until the site is
     paid for and live. <a href="{C.PRICING_URL}" target="_blank" rel="noopener">See pricing</a>.</div>
   <div class="wrap footer-bottom">
     <span>&copy; <span data-year>2026</span> {esc(C.BIZ)}</span>
     <span class="spacer"></span>
-    <span>Demo site by <a href="{C.SIXTYMS_URL}" target="_blank" rel="noopener">60 Minute Sites</a></span>
+    <span><a href="/credits.html">Photo credits</a> &middot;
+      Demo site by <a href="{C.SIXTYMS_URL}" target="_blank" rel="noopener">60 Minute Sites</a></span>
   </div>
 </footer>
 
@@ -362,6 +368,14 @@ def footer():
   <a class="dock-primary" href="/contact.html#quote">{ICONS["cal"]} Estimate</a>
 </nav>
 
+<div class="lightbox" hidden>
+  <button class="lb-close" type="button" aria-label="Close">&times;</button>
+  <button class="lb-prev" type="button" aria-label="Previous">&#8249;</button>
+  <img alt="">
+  <button class="lb-next" type="button" aria-label="Next">&#8250;</button>
+  <span class="lb-cap"></span>
+</div>
+
 <script src="/assets/js/main.js" defer></script>
 </body>
 </html>'''
@@ -371,7 +385,6 @@ def write(rel, html):
     p = ROOT / rel
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(html, encoding="utf-8")
-    return p
 
 
 # ------------------------------------------------------------------ home page
@@ -387,12 +400,17 @@ def build_home():
         for i, t, s in trust)
 
     why_html = "\n".join(
-        f'''  <div class="card reveal"><div class="card-body">
-    <h3>{esc(h)}</h3><p>{esc(p)}</p></div></div>''' for h, p in C.WHY)
+        f'  <div class="why reveal"><h3>{esc(h)}</h3><p>{esc(p)}</p></div>'
+        for h, p in C.WHY)
 
     chips = " ".join(
         f'<a class="chip" href="/areas/{town_slug(t)}.html">{esc(t)}</a>'
         for t, _m, _c in C.TOWNS[:14])
+
+    strip = "\n".join(
+        gal_item(k, "home") for k in
+        ["painted-room", "deck-finished", "window-install", "flooring-plank",
+         "trim-work", "door-exterior"])
 
     html = head(
         f"{C.BIZ} — Handyman, Painting & Home Repairs in {C.CITY}, {C.STATE_ABBR}",
@@ -402,7 +420,9 @@ def build_home():
     html += nav("home")
 
     html += f'''
-<section class="hero"><div class="wrap hero-split">
+<section class="hero">
+  <div class="hero-media">{img("hero", lazy=False)}</div>
+  <div class="wrap hero-split">
   <div class="hero-inner">
     <span class="eyebrow">{esc(C.CITY)} &amp; Normal, {C.STATE_ABBR} &mdash; handyman, painting &amp; repairs</span>
     <h1>One Person for <em>the Whole List</em></h1>
@@ -410,8 +430,8 @@ def build_home():
       The leaky sink, the room that needs painting, the deck boards gone soft, the door that will
       not shut &mdash; call him once and it all gets sorted by the same person.</p>
     <div class="hero-ctas">
-      <a class="btn btn-amber" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} Call {C.PHONE_DISPLAY}</a>
-      <a class="btn btn-ghost" href="/contact.html#quote">Get a free estimate</a>
+      <a class="btn btn-gold btn-lg" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} Call {C.PHONE_DISPLAY}</a>
+      <a class="btn btn-ghost btn-lg" href="/contact.html#quote">Get a free estimate</a>
     </div>
     <div class="hero-chips">
       <span>{CHECK} {esc(C.OWNER)} does the work himself</span>
@@ -439,7 +459,7 @@ def build_home():
   <div class="grid grid-3">
 {services_grid()}
   </div>
-  <p style="margin-top:28px;text-align:center" class="reveal">
+  <p style="margin-top:30px;text-align:center" class="reveal">
     <a class="btn btn-ghost-dark" href="/services.html">See everything, with what each one covers {ARROW}</a></p>
 </div></section>
 
@@ -454,16 +474,16 @@ def build_home():
       there is no long review history to show you, and it is exactly why the first people who call
       get a tradesman who very much wants the job done right.</p>
     <div class="hero-ctas" style="margin-bottom:0">
-      <a class="btn btn-amber" href="/about.html">More about {esc(C.OWNER)} {ARROW}</a>
+      <a class="btn btn-gold" href="/about.html">More about {esc(C.OWNER)} {ARROW}</a>
     </div>
   </div>
-  {ph("rick-at-work", "on-dark reveal")}
+  <div class="reveal">{figure("rick-at-work")}</div>
 </div></section>
 
-<section class="section"><div class="wrap">
+<section class="section on-white"><div class="wrap">
   <div class="section-head center reveal"><span class="eyebrow">Why call him</span>
     <h2>What You Actually Get</h2></div>
-  <div class="grid grid-2">
+  <div class="grid grid-2 why-grid">
 {why_html}
   </div>
 </div></section>
@@ -476,7 +496,19 @@ def build_home():
   </div>
 </div></section>
 
-<section class="section"><div class="wrap split lean">
+<section class="section tight"><div class="wrap">
+  <div class="section-head center reveal"><span class="eyebrow">The work</span>
+    <h2>A Look at the Kind of Thing He Does</h2>
+    <p>Painting, decks, windows, floors and trim &mdash; around {esc(C.CITY)}, Normal and the
+       towns in between.</p></div>
+  <div class="gal-grid cols-3">
+{strip}
+  </div>
+  <p style="text-align:center;margin-top:30px" class="reveal">
+    <a class="btn btn-ghost-dark" href="/gallery.html">See more of the work {ARROW}</a></p>
+</div></section>
+
+<section class="section on-white"><div class="wrap split lean">
   <div class="reveal">
     <span class="eyebrow">What it costs</span>
     <h2>How the Pricing Works</h2>
@@ -487,19 +519,6 @@ def build_home():
       than a repair, so you can see what is labour and what is lumber.</p>
   </div>
   {pricing_table()}
-</div></section>
-
-<section class="section on-ink"><div class="wrap split">
-  <div class="reveal">
-    <span class="eyebrow">Hear it from him</span>
-    <h2>A Minute With {esc(C.OWNER)}</h2>
-    <p>Hiring someone to work in your house is a trust decision, and a short clip of the person
-      who will be standing in your kitchen does more for that than any amount of copy.</p>
-    <p style="font-size:.95rem;opacity:.8">This slot is waiting on {esc(C.OWNER)}&rsquo;s video.
-      A phone held steady, good daylight, sixty seconds &mdash; who he is, what he does, where he
-      works, and what someone should call him about.</p>
-  </div>
-  {video_slot()}
 </div></section>
 
 <section class="section on-mist"><div class="wrap split">
@@ -531,7 +550,7 @@ def build_home():
 # -------------------------------------------------------------- services hub
 def build_services_hub():
     html = head(
-        f"What Rick Does — Handyman, Painting & Remodeling | {C.BIZ}",
+        f"What Rick Does — Handyman, Painting & Remodelling | {C.BIZ}",
         f"Everything {C.BIZ} covers: handyman repairs, interior and exterior painting, decks and "
         f"porches, windows and doors, tile and carpet, trim carpentry and room additions.")
     html += nav("services")
@@ -539,7 +558,8 @@ def build_services_hub():
         "What Rick Does",
         "Handyman work and painting are most of it. Here is the full list, with what each one "
         "actually covers &mdash; and what he does not do.",
-        crumbs=[("Home", "/index.html"), ("What Rick Does", None)])
+        crumbs=[("Home", "/index.html"), ("What Rick Does", None)],
+        photo="tools")
 
     html += f'''
 <section class="section"><div class="wrap">
@@ -589,44 +609,33 @@ def build_services_hub():
 
 
 # ------------------------------------------------------------- service pages
-SERVICE_SHOTS = {
-    "handyman": ["handyman-fix", "tools"],
-    "painting": ["painting-after", "painting-before-after", "exterior-paint"],
-    "decks-porches": ["deck-finished", "deck-repair"],
-    "windows-doors": ["window-install", "door-install"],
-    "flooring": ["tile-floor", "carpet-room"],
-    "trim-carpentry": ["trim-detail", "builtin"],
-    "room-additions": ["addition", "van"],
-}
-
-
 def build_service(s):
-    shots = SERVICE_SHOTS.get(s["slug"], ["rick-at-work"])
-    body = "\n".join(
-        f'    <h3>{esc(h)}</h3>\n    <p>{esc(p)}</p>' for h, p in s["body"])
+    main_photo, extra = C.SERVICE_PHOTOS[s["slug"]]
+    body = "\n".join(f'    <h3>{esc(h)}</h3>\n    <p>{esc(p)}</p>' for h, p in s["body"])
 
     other = [x for x in C.SERVICES if x["slug"] != s["slug"]][:3]
     other_html = "\n".join(service_card(x) for x in other)
 
     pills = "\n".join(
         f'  <a href="/services/{x["slug"]}.html"'
-        f'{" class=\"active\"" if x["slug"] == s["slug"] else ""}>{esc(x["short"])}</a>'
+        + (' class="active"' if x["slug"] == s["slug"] else "")
+        + f'>{esc(x["short"])}</a>'
         for x in C.SERVICES)
 
     extra_shots = ""
-    if len(shots) > 1:
-        cards = "\n".join(f"    {ph(k)}" for k in shots[1:])
+    if extra:
+        cards = "\n".join(gal_item(k, "svc") for k in extra)
         extra_shots = f'''
 <section class="section tight on-white"><div class="wrap">
   <div class="section-head reveal"><span class="eyebrow">The work</span>
-    <h2>Photos Of This Going In</h2>
-    <p>These slots are waiting on {esc(C.OWNER)}&rsquo;s own photos &mdash; each one names the
-       shot it needs.</p></div>
-  <div class="grid grid-2">
+    <h2>{esc(s["short"])} in Practice</h2></div>
+  <div class="gal-grid cols-{len(extra)}">
 {cards}
   </div>
 </div></section>
 '''
+
+    svc_q = esc(s["short"]).replace("&amp;", "%26").replace(" ", "+")
 
     html = head(
         f"{s['name']} in {C.CITY}, {C.STATE_ABBR} | {C.BIZ}",
@@ -634,8 +643,8 @@ def build_service(s):
     html += nav("services")
     html += page_hero(
         esc(s["hero_h"]), esc(s["hero_p"]),
-        crumbs=[("Home", "/index.html"), ("What Rick Does", "/services.html"),
-                (s["short"], None)])
+        crumbs=[("Home", "/index.html"), ("What Rick Does", "/services.html"), (s["short"], None)],
+        photo=main_photo)
 
     html += f'''
 <section class="section tight"><div class="wrap">
@@ -647,16 +656,15 @@ def build_service(s):
       <p class="lead">{esc(s["lead"])}</p>
 {body}
     </div>
-    <div class="reveal">
-      {ph(shots[0])}
-      <div style="margin-top:22px">
-        <h3 style="font-size:1.1rem">Get a price on this</h3>
-        <div class="hero-ctas" style="margin-bottom:0">
-          <a class="btn btn-amber btn-sm" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} {C.PHONE_DISPLAY}</a>
-          <a class="btn btn-ghost-dark btn-sm" href="/contact.html?service={esc(s["short"]).replace(" ", "+").replace("&amp;", "%26")}#quote">Send the form</a>
-        </div>
+    <aside class="reveal side-cta">
+      <div class="side-box">
+        <h3>Get a price on this</h3>
+        <p>Free estimate, and no pressure at the end of it.</p>
+        <a class="btn btn-gold btn-block" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} {C.PHONE_DISPLAY}</a>
+        <a class="btn btn-ghost-dark btn-block" style="margin-top:10px"
+           href="/contact.html?service={svc_q}#quote">Send the form instead</a>
       </div>
-    </div>
+    </aside>
   </div>
 </div></section>
 
@@ -693,13 +701,18 @@ def build_service(s):
     html += cta_band(
         h=f"Need {s['short']} Doing?",
         p=f"Call or text {C.PHONE_DISPLAY}, or send the form and {C.OWNER} will come and look. "
-          "Free estimates on anything beyond a small repair.")
+          "Free estimates on anything beyond a small repair.",
+        photo=main_photo)
     html += footer()
     write(f"services/{s['slug']}.html", html)
 
 
 # ----------------------------------------------------------------- area pages
-def build_area(town, miles, county):
+AREA_PHOTOS = ["door-exterior", "painting-exterior", "deck-finished", "painted-room",
+               "handyman-repair", "window-install"]
+
+
+def build_area(town, miles, county, idx):
     slug = town_slug(town)
     is_home = miles == 0
     others = [t for t, _m, _c in C.TOWNS if t != town][:13]
@@ -716,34 +729,34 @@ def build_area(town, miles, county):
                      "no pretending a two-hour round trip is a quick call-out.")
 
     svc_links = "\n".join(
-        f'      <li><a href="/services/{s["slug"]}.html">{esc(s["name"])}</a> &mdash; '
-        f'{esc(s["blurb"].split(" — ")[0].split(",")[0].strip().rstrip("."))}</li>'
+        f'      <li><a href="/services/{s["slug"]}.html">{esc(s["name"])}</a></li>'
         for s in C.SERVICES)
 
     html = head(
         f"Handyman & Painter in {town}, {C.STATE_ABBR} | {C.BIZ}",
         f"Handyman work, painting and home repairs in {town}, {C.STATE_ABBR}. Owner-operated, "
-        f"free estimates. {dist_line.replace('&rsquo;', chr(39))[:90]}")
+        f"free estimates, {C.RADIUS_MI} miles around {C.HOME_BASE}.")
     html += nav("areas")
     html += page_hero(
         f"Handyman &amp; Painting in {esc(town)}, {C.STATE_ABBR}",
         f"{esc(county)} &mdash; "
         + (f"{esc(C.OWNER)}&rsquo;s home town." if is_home
            else f"about {miles} miles from {esc(C.OWNER)}&rsquo;s base in {esc(C.CITY)}."),
-        crumbs=[("Home", "/index.html"), ("Service Area", "/sitemap.html"), (town, None)])
+        crumbs=[("Home", "/index.html"), ("Service Area", "/sitemap.html"), (town, None)],
+        photo=AREA_PHOTOS[idx % len(AREA_PHOTOS)])
 
     html += f'''
 <section class="section tight"><div class="wrap split lean">
   <div class="prose reveal">
     <p class="lead">{esc(C.OWNER)} covers {esc(town)} for handyman work, painting and the
-      general repair and remodeling jobs in between.</p>
+      general repair and remodelling jobs in between.</p>
     <p>{dist_line}</p>
     <p>The call that comes in most often from towns like {esc(town)} is not one big project. It
       is a list &mdash; a tap that drips, a door that sticks, a bedroom that has needed painting
       since before the kids left, and a deck board somebody keeps meaning to deal with. Getting
       all of it done in one or two visits by the same person is the whole point.</p>
     <h3>What he gets called out for in {esc(town)}</h3>
-    <ul class="plain-list">
+    <ul class="plain-list check-grid">
 {svc_links}
     </ul>
   </div>
@@ -776,7 +789,8 @@ def build_area(town, miles, county):
     html += cta_band(
         h=f"Need a Hand in {town}?",
         p=f"Call or text {C.PHONE_DISPLAY}. {C.OWNER} answers his own phone, and a photo "
-          "texted over usually gets you a price without anyone driving anywhere.")
+          "texted over usually gets you a price without anyone driving anywhere.",
+        photo=AREA_PHOTOS[(idx + 3) % len(AREA_PHOTOS)])
     html += footer()
     write(f"areas/{slug}.html", html)
 
@@ -786,13 +800,14 @@ def build_about():
     html = head(
         f"About {C.OWNER} — {C.BIZ}, {C.CITY} {C.STATE_ABBR}",
         f"{C.OWNER} runs {C.BIZ} out of {C.HOME_BASE}. Handyman work, painting and general "
-        f"remodeling, owner-operated, back working in {C.CITY} and building the list back up.")
+        f"remodelling, owner-operated, back working in {C.CITY} and building the list back up.")
     html += nav("about")
     html += page_hero(
         f"About {esc(C.OWNER)}",
         "Owner-operated means the person who quotes your job is the person who turns up to do "
         "it. That is most of what there is to say.",
-        crumbs=[("Home", "/index.html"), ("About Rick", None)])
+        crumbs=[("Home", "/index.html"), ("About Rick", None)],
+        photo="rick-at-work")
 
     html += f'''
 <section class="section tight"><div class="wrap split lean">
@@ -818,9 +833,9 @@ def build_about():
       licensed plumber or electrician instead.</p>
     <p>He would rather turn down a job he should not take than learn on your house.</p>
   </div>
-  <div class="reveal">
-    {ph("rick-at-work")}
-    <div class="channel-card" style="margin-top:22px">
+  <aside class="reveal side-cta">
+    {figure("painting-detail")}
+    <div class="channel-card">
       <h3 style="margin-bottom:2px">Get hold of {esc(C.OWNER)}</h3>
       <p>He answers his own phone.</p>
       <a class="channel" href="tel:{C.PHONE_TEL}">{ICONS["phone"]}
@@ -830,26 +845,14 @@ def build_about():
       <a class="channel" href="mailto:{C.EMAIL}">{ICONS["mail"]}
         <span><b>{C.EMAIL}</b><small>Email</small></span></a>
     </div>
-  </div>
+  </aside>
 </div></section>
 
-<section class="section on-navy"><div class="wrap split">
-  <div class="reveal">
-    <span class="eyebrow">In his own words</span>
-    <h2>A Minute With {esc(C.OWNER)}</h2>
-    <p>Letting somebody into your house is a trust decision. Sixty seconds of the actual person
-      talking does more for that than anything written about him in the third person.</p>
-    <p style="font-size:.95rem;opacity:.82">This slot is waiting on his video. Notes on how to
-      shoot it &mdash; and the handful of things not to do &mdash; are in DEMO-NOTES.md.</p>
-  </div>
-  {video_slot()}
-</div></section>
-
-<section class="section"><div class="wrap">
+<section class="section on-white"><div class="wrap">
   <div class="section-head center reveal"><span class="eyebrow">The shape of it</span>
     <h2>What You Get, Plainly</h2></div>
-  <div class="grid grid-2">
-{chr(10).join(f'  <div class="card reveal"><div class="card-body"><h3>{esc(h)}</h3><p>{esc(p)}</p></div></div>' for h, p in C.WHY)}
+  <div class="grid grid-2 why-grid">
+{chr(10).join(f'  <div class="why reveal"><h3>{esc(h)}</h3><p>{esc(p)}</p></div>' for h, p in C.WHY)}
   </div>
 </div></section>
 
@@ -861,7 +864,7 @@ def build_about():
   </div>
 </div></section>
 '''
-    html += cta_band()
+    html += cta_band(photo="deck-finished")
     html += footer()
     write("about.html", html)
 
@@ -871,13 +874,14 @@ def build_contact():
     html = head(
         f"Contact {C.OWNER} — Free Estimates | {C.BIZ}",
         f"Call or text {C.PHONE_DISPLAY}, or send the form. Free estimates on handyman work, "
-        f"painting and remodeling within {C.RADIUS_MI} miles of {C.HOME_BASE}.")
+        f"painting and remodelling within {C.RADIUS_MI} miles of {C.HOME_BASE}.")
     html += nav("contact")
     html += page_hero(
         "Get a Free Estimate",
         "Call, text a photo, or fill the form in. Whichever is easiest &mdash; they all reach "
         "the same person.",
-        crumbs=[("Home", "/index.html"), ("Contact", None)])
+        crumbs=[("Home", "/index.html"), ("Contact", None)],
+        photo="window-work")
 
     html += f'''
 <section class="section tight"><div class="wrap split lean">
@@ -941,8 +945,7 @@ def build_contact():
 
 
 # ------------------------------------------------------------------- reviews
-# No fabricated reviews anywhere. The sample cards below sit inside a visible
-# "this is a layout sample" frame so nobody can mistake them for real ones.
+# No fabricated reviews anywhere. The sample cards sit inside a visible frame.
 SAMPLE_CARDS = [
     ("A", "What a real review will look like",
      "A sentence or two from a customer about what Rick did, how it went and whether they would "
@@ -972,29 +975,35 @@ def build_reviews():
     html += page_hero(
         "Reviews",
         "There is nothing here yet, and this page is not going to pretend otherwise.",
-        crumbs=[("Home", "/index.html"), ("Reviews", None)])
+        crumbs=[("Home", "/index.html"), ("Reviews", None)],
+        photo="carpentry-mark")
 
     html += f'''
-<section class="section tight"><div class="wrap">
-  <div class="prose prose-wide reveal" style="margin:0 auto">
-    <p class="lead">{esc(C.OWNER)} has no reviews online yet. That is the honest position and it
-      is worth explaining rather than hiding.</p>
-    <p>He was working in this area a few years back, was away for a stretch, and has started the
+<section class="section tight"><div class="wrap split lean">
+  <div class="prose reveal">
+    <p class="lead">{esc(C.OWNER)} has no reviews online yet, and this page is not going to
+      invent any.</p>
+    <p>He worked this area a few years back, was away for a stretch, and has started the
       customer list again from close to nothing. The reviews from before are not attached to
-      anything you can search for, and he is not about to put words in anybody&rsquo;s mouth to
-      fill a page.</p>
-    <p>So this page will stay thin for a little while, and then it will not. Every job he does
-      from here ends with him asking for a Google review, and every one of those will land on
-      this page automatically.</p>
+      anything you can search for.</p>
+    <p>So the page stays thin for a little while, and then it will not. Every job from here ends
+      with him asking for a Google review, and every one of those lands here automatically.</p>
     <h3>Which cuts both ways</h3>
-    <p>If you are weighing up calling someone with no reviews, that is a reasonable thing to
-      hesitate over. Two things in his favour. First, you are dealing with the owner, so there is
-      nobody to hide behind if the work is poor. Second, a tradesman with three reviews wants
-      your job considerably more than one with three hundred &mdash; and right now, he is the
-      one with three.</p>
+    <p>If you are weighing up calling someone with no reviews, that is fair enough. Two things
+      in his favour. You are dealing with the owner, so there is nobody to hide behind if the
+      work is poor. And a tradesman with three reviews wants your job considerably more than one
+      with three hundred &mdash; right now, he is the one with three.</p>
     <p>Ask him for a reference from a job he has done since he came back. He would far rather
-      you called one than took his word for it.</p>
+      you rang one than took his word for it.</p>
   </div>
+  <aside class="reveal side-cta">
+    {figure("painted-room")}
+    <div class="side-box">
+      <h3>Be one of the first</h3>
+      <p>Small jobs welcome. That is how a review list starts.</p>
+      <a class="btn btn-gold btn-block" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} {C.PHONE_DISPLAY}</a>
+    </div>
+  </aside>
 </div></section>
 
 <section class="section on-mist"><div class="wrap">
@@ -1010,15 +1019,15 @@ def build_reviews():
   </div>
 </div></section>
 
-<section class="section"><div class="wrap split lean">
+<section class="section on-white"><div class="wrap split lean">
   <div class="reveal">
     <span class="eyebrow">If he has worked for you</span>
     <h2>A Review Is Worth More Than a Tip</h2>
     <p>For a one-person business starting over, a Google review is the single most useful thing
       a customer can hand over. It takes two minutes and it is the difference between the next
       person calling and the next person scrolling past.</p>
-    <p style="font-size:.95rem;opacity:.75">The button here will point at {esc(C.OWNER)}&rsquo;s
-      Google Business Profile once it is set up &mdash; see DEMO-NOTES.md.</p>
+    <p style="font-size:.95rem;opacity:.75"><b>Demo note:</b> this button will point straight at
+      {esc(C.OWNER)}&rsquo;s Google Business Profile once that is set up.</p>
     <div class="hero-ctas" style="margin-bottom:0">
       <a class="btn btn-ghost-dark" href="/contact.html#quote">Leave a review (link coming) {ARROW}</a>
     </div>
@@ -1035,73 +1044,112 @@ def build_reviews():
   </div>
 </div></section>
 '''
-    html += cta_band()
+    html += cta_band(photo="trim-work")
     html += footer()
     write("reviews.html", html)
 
 
 # ------------------------------------------------------------------- gallery
 def build_gallery():
-    cards = "\n".join(f"    {ph(k)}" for k, _r, _l, _c in C.SHOT_LIST)
+    items = "\n".join(gal_item(k) for k in C.GALLERY)
 
     html = head(
-        f"The Work — Photo Gallery | {C.BIZ}",
-        f"Photographs of {C.OWNER}'s handyman, painting and remodeling work. This gallery is "
-        f"waiting on his own photos — every slot names the shot it needs.")
+        f"The Work — Gallery | {C.BIZ}",
+        f"Painting, decks, windows, flooring and trim work by {C.BIZ} around {C.CITY} and "
+        f"Normal, Illinois.")
     html += nav("gallery")
     html += page_hero(
         "The Work",
-        "This is the one page on the site that cannot be written. It needs photographs, and "
-        "here is exactly which ones.",
-        crumbs=[("Home", "/index.html"), ("Work", None)])
+        "Painting, decks, windows, floors and trim &mdash; the kind of jobs that fill most weeks.",
+        crumbs=[("Home", "/index.html"), ("Work", None)],
+        photo="painting-interior")
 
     html += f'''
 <section class="section tight"><div class="wrap">
-  <div class="prose prose-wide reveal" style="margin:0 auto 40px">
-    <p class="lead">Nothing sells a tradesman like photographs of finished work, and nothing
-      undermines one faster than stock photos of somebody else&rsquo;s house.</p>
-    <p>So this gallery is deliberately empty. Every slot below is labelled with the shot that
-      belongs in it &mdash; shoot them on a phone, in daylight, and the page fills itself.
-      Sixteen photos is plenty; eight is enough to launch with.</p>
-    <p style="font-size:.95rem;opacity:.75">A quick note on taking them: shoot in the morning or
-      late afternoon rather than the middle of a bright day, stand square on to what you are
-      photographing, and get the before shot from the same spot as the after shot. The before
-      photos are worth as much as the after ones.</p>
+  <div class="gal-grid cols-3">
+{items}
   </div>
-  <div class="shot-grid">
-{cards}
-  </div>
+  <p class="gal-note reveal">These are library photographs standing in while {esc(C.OWNER)}
+    gets his own taken &mdash; see <a href="/credits.html">credits</a>.</p>
 </div></section>
 
 <section class="section on-mist"><div class="wrap split lean">
   <div class="reveal">
-    <span class="eyebrow">Worth knowing</span>
-    <h2>Why There Are No Stock Photos Here</h2>
-    <p>It would have been easy to fill this page with library photographs of other people&rsquo;s
-      kitchens. Plenty of contractor sites do exactly that, and customers can tell &mdash; the
-      houses look like catalogues and nothing matches the work described.</p>
-    <p>Sixteen honest phone photos of real jobs in {esc(C.CITY)} and Normal will out-perform a
-      hundred polished stock images, because people recognise their own neighbourhoods and
-      they recognise a real job when they see one.</p>
+    <span class="eyebrow">What you are looking at</span>
+    <h2>One Person, Most of the Trades</h2>
+    <p>Very little of what Rick does is exotic. It is painting, boards, glass, floors and trim
+      &mdash; done carefully, cleaned up behind, and finished when he said it would be.</p>
+    <p>The value in calling one person for all of it is not really the price. It is that nobody
+      has to coordinate four trades, and nobody can blame the last person who was in the house.</p>
+    <div class="hero-ctas" style="margin-bottom:0">
+      <a class="btn btn-gold" href="/contact.html#quote">Get a free estimate {ARROW}</a>
+    </div>
   </div>
   <div class="reveal">
-    <h3>The short version of the shot list</h3>
+    <h3>Most-asked-for jobs</h3>
     {check_list([
-        "One good photo of Rick actually working — this matters most",
-        "Two or three painted rooms, shot from a corner",
-        "A before and after pair taken from the same spot",
-        "A finished deck, shot low along the boards",
-        "A new window from inside and a new door from outside",
-        "A tile floor or backsplash, taken from low down",
-        "A close-up of trim or a built-in",
-        "The van with a ladder on it",
+        "A room, a hallway or a whole interior painted",
+        "The outside of the house, or just the trim and front door",
+        "Deck boards, railings and a fresh coat of stain",
+        "Draughty windows and doors that will not shut",
+        "Tile, carpet or vinyl plank over a subfloor worth checking",
+        "Baseboard, crown, casing and built-ins",
+        "A list of small repairs in one visit",
     ])}
   </div>
 </div></section>
 '''
-    html += cta_band()
+    html += cta_band(photo="deck-repair")
     html += footer()
     write("gallery.html", html)
+
+
+# ------------------------------------------------------------------- credits
+def build_credits():
+    cj = HERE / "credits.json"
+    rows = ""
+    if cj.exists():
+        data = json.loads(cj.read_text())
+        seen = set()
+        order = C.GALLERY + [k for k in C.PHOTOS if k not in C.GALLERY]
+        for key in order:
+            pid = data["plan"].get(key)
+            if not pid or pid in seen:
+                continue
+            seen.add(pid)
+            m = data["meta"][pid]
+            rows += (f'      <tr><td>{esc(C.PHOTOS[key][1])}</td>'
+                     f'<td><a href="{m["profile"]}" rel="noopener nofollow" target="_blank">{esc(m["who"])}</a></td>'
+                     f'<td><a href="{m["page"]}" rel="noopener nofollow" target="_blank">Unsplash</a></td></tr>\n')
+
+    html = head(f"Photo credits | {C.BIZ}", "Where the photographs on this site come from.")
+    html += nav("")
+    html += page_hero(
+        "Photo Credits",
+        "Every photograph on this site, and where it came from.",
+        crumbs=[("Home", "/index.html"), ("Credits", None)],
+        photo="tools")
+    html += f'''
+<section class="section tight"><div class="wrap prose prose-wide">
+  <p class="lead">The photographs on this site are library images, not photographs of
+    {esc(C.OWNER)}&rsquo;s own work.</p>
+  <p>They come from <a href="https://unsplash.com" rel="noopener" target="_blank">Unsplash</a> and
+    are used under the <a href="https://unsplash.com/license" rel="noopener" target="_blank">Unsplash
+    licence</a>, which permits commercial use without attribution. They are credited here anyway.</p>
+  <p>They stand in for the kinds of job {esc(C.OWNER)} does until there are photographs of his
+    own to replace them. Swapping one in is a single file drop &mdash; same filename, same folder,
+    and the whole site updates.</p>
+  <div class="rate-wrap" style="margin-top:28px"><table class="rate-table">
+    <thead><tr><th>Photograph</th><th>Photographer</th><th>Source</th></tr></thead>
+    <tbody>
+{rows}    </tbody></table></div>
+  <p style="margin-top:26px;font-size:.92rem;opacity:.7">The {esc(C.BIZ)} logo is Rick&rsquo;s own.
+    The rest of the site &mdash; layout, type and code &mdash; was built by
+    <a href="{C.SIXTYMS_URL}" rel="noopener" target="_blank">60 Minute Sites</a>.</p>
+</div></section>
+'''
+    html += footer()
+    write("credits.html", html)
 
 
 # ------------------------------------------------------------------ sitemap
@@ -1117,7 +1165,8 @@ def build_sitemap_page():
     html = head(f"Sitemap | {C.BIZ}", f"Every page on the {C.BIZ} site.")
     html += nav("")
     html += page_hero("Sitemap", "Every page on the site.",
-                      crumbs=[("Home", "/index.html"), ("Sitemap", None)])
+                      crumbs=[("Home", "/index.html"), ("Sitemap", None)],
+                      photo="door-exterior")
     html += f'''
 <section class="section"><div class="wrap grid grid-3">
   <div class="reveal">
@@ -1129,6 +1178,7 @@ def build_sitemap_page():
       <li><a href="/reviews.html">Reviews</a></li>
       <li><a href="/about.html">About {esc(C.OWNER)}</a></li>
       <li><a href="/contact.html">Contact &amp; Free Estimate</a></li>
+      <li><a href="/credits.html">Photo credits</a></li>
     </ul>
     <h3 style="margin-top:28px">Services</h3>
     <ul class="plain-list">
@@ -1143,7 +1193,7 @@ def build_sitemap_page():
   </div>
 </div></section>
 '''
-    html += cta_band()
+    html += cta_band(photo="painted-room")
     html += footer()
     write("sitemap.html", html)
 
@@ -1162,7 +1212,7 @@ def build_thank_you():
       to people the same day wherever he can. If it is urgent, ringing him is always faster than
       waiting on a reply.</p>
     <div class="hero-ctas" style="justify-content:center">
-      <a class="btn btn-amber" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} Call {C.PHONE_DISPLAY}</a>
+      <a class="btn btn-gold" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} Call {C.PHONE_DISPLAY}</a>
       <a class="btn btn-ghost-dark" href="/index.html">Back to the site</a>
     </div>
     <p class="form-note" style="margin-top:30px"><b>Demo note:</b> this is a demo site, so what
@@ -1187,7 +1237,7 @@ def build_404():
     <p style="font-size:1.1rem;opacity:.8">Something has moved or the link was wrong. The
       sitemap has everything on it, or just ring {esc(C.OWNER)} and ask.</p>
     <div class="hero-ctas" style="justify-content:center">
-      <a class="btn btn-amber" href="/index.html">Back to the home page</a>
+      <a class="btn btn-gold" href="/index.html">Back to the home page</a>
       <a class="btn btn-ghost-dark" href="/sitemap.html">See the sitemap</a>
     </div>
   </div>
@@ -1199,7 +1249,6 @@ def build_404():
 
 # ------------------------------------------------------------- non-HTML files
 def build_meta_files():
-    # Demo site: block every crawler. Flip this at launch.
     (ROOT / "robots.txt").write_text(
         "# DEMO SITE — crawling blocked on purpose.\n"
         "# At launch: replace with 'User-agent: *' / 'Allow: /' and the real sitemap URL.\n"
@@ -1213,41 +1262,47 @@ def build_meta_files():
         '    X-Robots-Tag = "noindex, nofollow"\n'
         '    X-Content-Type-Options = "nosniff"\n'
         '    Referrer-Policy = "strict-origin-when-cross-origin"\n\n'
+        '[[headers]]\n  for = "/assets/*"\n  [headers.values]\n'
+        '    Cache-Control = "public, max-age=31536000, immutable"\n\n'
         '[[redirects]]\n  from = "/services/"\n  to = "/services.html"\n  status = 301\n\n'
         '[[redirects]]\n  from = "/areas/"\n  to = "/sitemap.html"\n  status = 301\n',
         encoding="utf-8")
 
-    (ROOT / ".gitignore").write_text(
-        ".DS_Store\n__pycache__/\n*.pyc\n", encoding="utf-8")
+    (ROOT / ".gitignore").write_text(".DS_Store\n__pycache__/\n*.pyc\n", encoding="utf-8")
 
 
 # ------------------------------------------------------------------- the run
 def main():
-    # clear generated page dirs so renames cannot leave orphans behind
     for d in ("services", "areas"):
         p = ROOT / d
         if p.exists():
             shutil.rmtree(p)
 
+    missing = [k for k, (f, _a) in C.PHOTOS.items() if not (PHOTO_DIR / f).exists()]
+    if missing:
+        raise SystemExit(f"missing photo files for: {missing}")
+
     build_home()
     build_services_hub()
     for s in C.SERVICES:
         build_service(s)
-    for t, m, c in C.TOWNS:
-        build_area(t, m, c)
+    for i, (t, m, c) in enumerate(C.TOWNS):
+        build_area(t, m, c, i)
     build_about()
     build_contact()
     build_reviews()
     build_gallery()
+    build_credits()
     build_sitemap_page()
     build_thank_you()
     build_404()
     build_meta_files()
 
     pages = sorted(p for p in ROOT.rglob("*.html") if "_generator" not in p.parts)
+    photos = sorted(PHOTO_DIR.glob("*.jpg"))
     print(f"built {len(pages)} pages")
     print(f"  {len(C.SERVICES)} services, {len(C.TOWNS)} service areas")
-    print(f"  photo placeholders: {len(C.SHOT_LIST)} distinct shots")
+    print(f"  {len(photos)} photographs ({sum(p.stat().st_size for p in photos)//1024} KB)")
     if C.PHONE_IS_PLACEHOLDER:
         print(f"  ! phone is a PLACEHOLDER ({C.PHONE_DISPLAY}) — see DEMO-NOTES.md")
 

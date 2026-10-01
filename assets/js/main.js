@@ -1,5 +1,5 @@
-/* Killion Remodeling — site behavior
-   Sections 1-6 are the real site. Section 7 is demo-only and is marked
+/* Killion Remodelling — site behaviour
+   Sections 1-7 are the real site. Section 8 is demo-only and is marked
    for deletion at launch (see DEMO-NOTES.md). */
 (function () {
   "use strict";
@@ -81,7 +81,63 @@
     });
   })();
 
-  /* ------------------------------------------------- 6. form plumbing
+  /* ------------------------------------------------- 6. photo lightbox */
+  (function () {
+    var box = $(".lightbox");
+    if (!box) return;
+    var pic = $("img", box);
+    var cap = $(".lb-cap", box);
+    var group = [];
+    var idx = 0;
+    var lastFocus = null;
+
+    function show(i) {
+      if (!group.length) return;
+      idx = (i + group.length) % group.length;
+      var a = group[idx];
+      pic.src = a.getAttribute("href");
+      pic.alt = a.getAttribute("data-cap") || "";
+      cap.textContent = a.getAttribute("data-cap") || "";
+      var many = group.length > 1;
+      $(".lb-prev", box).hidden = !many;
+      $(".lb-next", box).hidden = !many;
+    }
+
+    function open(a) {
+      var name = a.getAttribute("data-lightbox");
+      group = $$('a[data-lightbox="' + name + '"]');
+      lastFocus = document.activeElement;
+      box.hidden = false;
+      document.body.style.overflow = "hidden";
+      show(group.indexOf(a));
+      $(".lb-close", box).focus();
+    }
+
+    function close() {
+      box.hidden = true;
+      pic.removeAttribute("src");
+      document.body.style.overflow = "";
+      if (lastFocus) lastFocus.focus();
+    }
+
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest("a[data-lightbox]");
+      if (a) { e.preventDefault(); open(a); }
+    });
+    box.addEventListener("click", function (e) {
+      if (e.target === box || e.target.closest(".lb-close")) return close();
+      if (e.target.closest(".lb-prev")) return show(idx - 1);
+      if (e.target.closest(".lb-next")) return show(idx + 1);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (box.hidden) return;
+      if (e.key === "Escape") close();
+      else if (e.key === "ArrowLeft") show(idx - 1);
+      else if (e.key === "ArrowRight") show(idx + 1);
+    });
+  })();
+
+  /* ------------------------------------------------- 7. form plumbing
      Every form posts to the 60 Minute Sites intake endpoint. These hidden
      fields tell 60MS which page and which campaign the lead came from. */
   var t0 = Date.now();
@@ -103,7 +159,7 @@
   });
 
   /* =====================================================================
-     7. DEMO ONLY — the "this is a demo" modal and the banner's re-open
+     8. DEMO ONLY — the "this is a demo" modal and the banner's re-open
         button. Delete this section, the .demo-bar markup, the .footer-demo
         markup and the .demo-bar/.demo-modal CSS when the site goes live.
      ================================================================== */
@@ -124,14 +180,14 @@
         '<button class="dm-close" type="button" aria-label="Close">' + ICON_X + "</button>" +
         '<span class="dm-badge">Demo preview</span>' +
         "<h2>This is a demo site</h2>" +
-        "<p>You are looking at a design concept built for <b>Killion Remodeling</b> " +
+        "<p>You are looking at a design concept built for <b>Killion Remodelling</b> " +
         'by <a href="https://60minutesites.com" target="_blank" rel="noopener">60&nbsp;Minute&nbsp;Sites</a>. ' +
         "It is here so Rick can see what his own site would look like before he buys one.</p>" +
-        "<p>Two things to know while you click around. The photographs are not in yet, so " +
-        "every picture slot is a labelled placeholder showing which photo belongs there. And " +
-        "<b>every form on this site sends to 60 Minute Sites, not to Rick</b> &mdash; they get " +
+        "<p>Two things to know while you click around. The photographs are " +
+        '<a href="/credits.html">library images</a> standing in until Rick&rsquo;s own are taken. ' +
+        "And <b>every form on this site sends to 60 Minute Sites, not to Rick</b> &mdash; they get " +
         "pointed at his inbox once the site is paid for and live.</p>" +
-        '<button class="btn btn-amber btn-block" type="button" data-dismiss>Have a look around</button>' +
+        '<button class="btn btn-gold btn-block" type="button" data-dismiss>Have a look around</button>' +
         '<p class="dm-foot">Want one of these? ' +
         '<a href="https://60minutesites.com/pricing.html" target="_blank" rel="noopener">See pricing</a></p>' +
       "</div>";
