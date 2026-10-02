@@ -190,7 +190,7 @@ def quote_form(form_id="quote", compact=False, minimal=False, source="", presele
       <input type="hidden" name="utm_content" value="">
       <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="field full">
-        <button class="btn btn-gold btn-block" type="submit">Send it to {esc(C.OWNER)} {ARROW}</button>
+        <button class="btn btn-gold btn-block" type="submit">Send it to me {ARROW}</button>
         <p class="form-note"><b>Demo note:</b> while this site is a demo, everything sent through
           this form goes to <a href="{C.SIXTYMS_URL}" target="_blank" rel="noopener">60&nbsp;Minute&nbsp;Sites</a>
           &mdash; not to {esc(C.OWNER)}. Forms get pointed at his own inbox once the site is paid
@@ -255,7 +255,7 @@ def nav(active=""):
   </a>
   <button class="nav-burger" aria-label="Menu" aria-expanded="false"><svg viewBox="0 0 16 16"><path d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/></svg></button>
   <nav class="main-nav">
-    <div class="nav-drop"><button aria-haspopup="true" aria-expanded="false">What Rick Does
+    <div class="nav-drop"><button aria-haspopup="true" aria-expanded="false">What I Do
       <svg viewBox="0 0 16 16"><path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/></svg></button>
       <div class="drop-menu">
         <a href="/services.html"><b>All services</b></a>
@@ -264,7 +264,7 @@ def nav(active=""):
     <a href="/areas/{town_slug(C.CITY)}.html"{cls("areas")}>Service Area</a>
     <a href="/gallery.html"{cls("gallery")}>Work</a>
     <a href="/reviews.html"{cls("reviews")}>Reviews</a>
-    <a href="/about.html"{cls("about")}>About Rick</a>
+    <a href="/about.html"{cls("about")}>About Me</a>
     <a href="/contact.html"{cls("contact")}>Contact</a>
     <a href="/contact.html#quote" class="btn btn-gold btn-sm nav-cta">Free Estimate</a>
   </nav>
@@ -290,9 +290,9 @@ def page_hero(h1, p, crumbs=None, photo="rick-at-work"):
 
 
 def cta_band(h=None, p=None, photo="painting-exterior"):
-    h = h or f"Get {C.OWNER} to Come and Look"
+    h = h or "Let Me Come and Look"
     p = p or ("Free estimates on anything beyond a small repair, a straight price, and the "
-              "person who quotes it is the person who does the work.")
+              "person who quotes it is the person who turns up to do it.")
     return f'''
 <section class="section cta-band">
   <div class="hero-media">{img(photo)}</div>
@@ -319,23 +319,23 @@ def footer():
   <div class="wrap footer-grid">
     <div class="footer-brand">
       <img src="/assets/img/logo-light.png" alt="{esc(C.BIZ)}" width="2095" height="751" loading="lazy">
-      <p>Handyman work, painting and general remodeling, owner-operated out of
+      <p>Handyman work, painting and general remodeling. I work out of
          {esc(C.HOME_BASE)} and {C.RADIUS_MI} miles around it.</p>
       <a class="btn btn-gold btn-sm" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} {C.PHONE_DISPLAY}</a>
     </div>
-    <div><h4>What Rick Does</h4><ul class="footer-links">
+    <div><h4>What I Do</h4><ul class="footer-links">
 {svc}
       <li><a href="/services.html">All services</a></li>
     </ul></div>
     <div><h4>The Business</h4><ul class="footer-links">
-      <li><a href="/about.html">About {esc(C.OWNER)}</a></li>
+      <li><a href="/about.html">About me</a></li>
       <li><a href="/gallery.html">The work</a></li>
       <li><a href="/reviews.html">Reviews</a></li>
       <li><a href="/areas/{town_slug(C.CITY)}.html">Service area</a></li>
       <li><a href="/contact.html">Contact</a></li>
       <li><a href="/sitemap.html">Sitemap</a></li>
     </ul></div>
-    <div><h4>Get Hold of Him</h4><ul class="footer-links">
+    <div><h4>Get Hold of Me</h4><ul class="footer-links">
       <li><a href="tel:{C.PHONE_TEL}">{C.PHONE_DISPLAY}</a></li>
       <li><a href="sms:+1{C.PHONE_TEL}">Text a photo</a></li>
       <li><a href="mailto:{C.EMAIL}">{C.EMAIL}</a></li>
@@ -390,10 +390,10 @@ def write(rel, html):
 # ------------------------------------------------------------------ home page
 def build_home():
     trust = [
-        ("person", f"{C.OWNER} does the work", "No crew you have not met"),
-        ("wallet", "Free estimates", "No charge to come and look"),
+        ("person", "I do the work myself", "No crew you have not met"),
+        ("wallet", "Free estimates", "No charge for me to come and look"),
         ("pin", f"{C.RADIUS_MI} miles out", f"{C.CITY} to Peoria, Champaign &amp; Decatur"),
-        ("text", "Call or text", "He answers his own phone"),
+        ("text", "Call or text", "I answer my own phone"),
     ]
     trust_html = "\n".join(
         f'  <div class="trust-item">{ICONS[i]}<span><b>{t}</b><small>{s}</small></span></div>'
@@ -426,22 +426,22 @@ def build_home():
   <div class="hero-inner">
     <span class="eyebrow">{esc(C.CITY)} &amp; Normal, {C.STATE_ABBR} &mdash; handyman, painting &amp; repairs</span>
     <h1>One Person for <em>the Whole List</em></h1>
-    <p class="hero-sub">{esc(C.OWNER)} is a handyman and painter working out of {esc(C.HOME_BASE)}.
-      The leaky sink, the room that needs painting, the deck boards gone soft, the door that will
-      not shut &mdash; call him once and it all gets sorted by the same person.</p>
+    <p class="hero-sub">I&rsquo;m {esc(C.OWNER)} &mdash; a handyman and painter working out of
+      {esc(C.HOME_BASE)}. The leaky sink, the room that needs painting, the deck boards gone soft,
+      the door that will not shut &mdash; call me once and it all gets sorted by the same person.</p>
     <div class="hero-ctas">
       <a class="btn btn-gold btn-lg" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} Call {C.PHONE_DISPLAY}</a>
       <a class="btn btn-ghost btn-lg" href="/contact.html#quote">Get a free estimate</a>
     </div>
     <div class="hero-chips">
-      <span>{CHECK} {esc(C.OWNER)} does the work himself</span>
+      <span>{CHECK} I do the work myself</span>
       <span>{CHECK} Free estimates</span>
       <span>{CHECK} {C.RADIUS_MI}-mile radius</span>
       <span>{CHECK} Call, text or email</span>
     </div>
   </div>
   <div class="hero-card">
-    <h3>Tell him what you need</h3>
+    <h3>Tell me what you need</h3>
     <p>A list is fine. So is one leaky tap.</p>
     {quote_form("quote-hero", minimal=True, source=f"{C.BIZ} demo — homepage hero")}
   </div>
@@ -452,7 +452,7 @@ def build_home():
 </div></section>
 
 <section class="section"><div class="wrap">
-  <div class="section-head center reveal"><span class="eyebrow">What Rick does</span>
+  <div class="section-head center reveal"><span class="eyebrow">What I do</span>
     <h2>Handyman Work, Painting, and the Trades Around Them</h2>
     <p>Mostly small jobs and paint. Decks, windows, flooring, trim and the occasional addition
        when somebody needs more house.</p></div>
@@ -467,21 +467,21 @@ def build_home():
   <div class="reveal">
     <span class="eyebrow">Straight talk</span>
     <h2>New to You, Not New to the Work</h2>
-    <p>{esc(C.OWNER)} was busy in {esc(C.CITY)} a few years back. He was away for a stretch, and
-      he is back now &mdash; which is the honest reason you have not seen his truck on your street
-      and will not find a hundred reviews online yet.</p>
-    <p>He is rebuilding the customer list from scratch. That is worth knowing both ways: it is why
+    <p>I was busy in {esc(C.CITY)} a few years back. I was away for a stretch, and I am back
+      now &mdash; which is the honest reason you have not seen my truck on your street and will
+      not find a hundred reviews online yet.</p>
+    <p>I am rebuilding the customer list from scratch. That is worth knowing both ways: it is why
       there is no long review history to show you, and it is exactly why the first people who call
       get a tradesman who very much wants the job done right.</p>
     <div class="hero-ctas" style="margin-bottom:0">
-      <a class="btn btn-gold" href="/about.html">More about {esc(C.OWNER)} {ARROW}</a>
+      <a class="btn btn-gold" href="/about.html">More about me {ARROW}</a>
     </div>
   </div>
   <div class="reveal">{figure("rick-at-work")}</div>
 </div></section>
 
 <section class="section on-white"><div class="wrap">
-  <div class="section-head center reveal"><span class="eyebrow">Why call him</span>
+  <div class="section-head center reveal"><span class="eyebrow">Why call me</span>
     <h2>What You Actually Get</h2></div>
   <div class="grid grid-2 why-grid">
 {why_html}
@@ -498,7 +498,7 @@ def build_home():
 
 <section class="section tight"><div class="wrap">
   <div class="section-head center reveal"><span class="eyebrow">The work</span>
-    <h2>A Look at the Kind of Thing He Does</h2>
+    <h2>A Look at the Kind of Thing I Do</h2>
     <p>Painting, decks, windows, floors and trim &mdash; around {esc(C.CITY)}, Normal and the
        towns in between.</p></div>
   <div class="gal-grid cols-3">
@@ -512,9 +512,9 @@ def build_home():
   <div class="reveal">
     <span class="eyebrow">What it costs</span>
     <h2>How the Pricing Works</h2>
-    <p>Rick has not put price lists on this site, because a number without seeing the job is a
-      number that changes later. What he will do is tell you how your particular job gets
-      priced before he drives anywhere.</p>
+    <p>I have not put price lists on this site, because a number without seeing the job is a
+      number that changes later. What I will do is tell you how your particular job gets priced
+      before I drive anywhere.</p>
     <p style="font-size:.95rem;opacity:.75">Materials are listed separately on anything bigger
       than a repair, so you can see what is labour and what is lumber.</p>
   </div>
@@ -525,11 +525,11 @@ def build_home():
   <div class="reveal">
     <span class="eyebrow">Service area</span>
     <h2>{C.RADIUS_MI} Miles Around {esc(C.CITY)}</h2>
-    <p>{esc(C.CITY)} and Normal are home. From there it is about {C.RADIUS_MI} miles in every
+    <p>{esc(C.CITY)} and Normal are home. From there I go about {C.RADIUS_MI} miles in every
       direction &mdash; out to Peoria, Champaign, Decatur, Pontiac and Lincoln, and all the
       smaller towns in between.</p>
     <div class="chip-row" style="margin-bottom:20px">{chips}</div>
-    <p style="font-size:.95rem;opacity:.75">Just outside the circle? Call and ask anyway.</p>
+    <p style="font-size:.95rem;opacity:.75">Just outside the circle? Call and ask me anyway.</p>
   </div>
   {radius_map()}
 </div></section>
@@ -550,15 +550,15 @@ def build_home():
 # -------------------------------------------------------------- services hub
 def build_services_hub():
     html = head(
-        f"What Rick Does — Handyman, Painting & Remodeling | {C.BIZ}",
+        f"What I Do — Handyman, Painting & Remodeling | {C.BIZ}",
         f"Everything {C.BIZ} covers: handyman repairs, interior and exterior painting, decks and "
         f"porches, windows and doors, tile and carpet, trim carpentry and room additions.")
     html += nav("services")
     html += page_hero(
-        "What Rick Does",
+        "What I Do",
         "Handyman work and painting are most of it. Here is the full list, with what each one "
-        "actually covers &mdash; and what he does not do.",
-        crumbs=[("Home", "/index.html"), ("What Rick Does", None)],
+        "actually covers &mdash; and what I don&rsquo;t do.",
+        crumbs=[("Home", "/index.html"), ("What I Do", None)],
         photo="tools")
 
     html += f'''
@@ -571,18 +571,18 @@ def build_services_hub():
 <section class="section on-mist"><div class="wrap split lean">
   <div class="reveal">
     <span class="eyebrow">Worth saying out loud</span>
-    <h2>What He Does Not Do</h2>
-    <p>Full kitchen and bathroom remodels. Rick will do the tile, the flooring, the trim, the
+    <h2>What I Don&rsquo;t Do</h2>
+    <p>Full kitchen and bathroom remodels. I will do the tile, the flooring, the trim, the
       painting and the doors in a kitchen or a bathroom &mdash; but the whole gut-and-rebuild is
       its own specialism and belongs with somebody who does nothing else.</p>
     <p>Same with anything needing a licensed trade: opening a panel, moving gas, re-piping a
-      house, structural engineering. He will tell you that on the phone rather than take the job
-      and work it out as he goes.</p>
+      house, structural engineering. I will tell you that on the phone rather than take the job
+      and work it out as I go.</p>
     <p style="font-size:.95rem;opacity:.75">Knowing where the line is tends to be a good sign in
       a tradesman, not a bad one.</p>
   </div>
   <div class="reveal">
-    <h3>Still worth a call for</h3>
+    <h3>Still worth calling me for</h3>
     {check_list([
         "A list of small jobs nobody else will come out for",
         "Painting a room, a whole interior or the outside of the house",
@@ -643,7 +643,7 @@ def build_service(s):
     html += nav("services")
     html += page_hero(
         esc(s["hero_h"]), esc(s["hero_p"]),
-        crumbs=[("Home", "/index.html"), ("What Rick Does", "/services.html"), (s["short"], None)],
+        crumbs=[("Home", "/index.html"), ("What I Do", "/services.html"), (s["short"], None)],
         photo=main_photo)
 
     html += f'''
@@ -659,7 +659,7 @@ def build_service(s):
     <aside class="reveal side-cta">
       <div class="side-box">
         <h3>Get a price on this</h3>
-        <p>Free estimate, and no pressure at the end of it.</p>
+        <p>Free estimate, and no pressure from me at the end of it.</p>
         <a class="btn btn-gold btn-block" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} {C.PHONE_DISPLAY}</a>
         <a class="btn btn-ghost-dark btn-block" style="margin-top:10px"
            href="/contact.html?service={svc_q}#quote">Send the form instead</a>
@@ -689,9 +689,9 @@ def build_service(s):
 </div></section>
 
 <section class="section on-white"><div class="wrap">
-  <div class="section-head reveal"><span class="eyebrow">While he is there</span>
+  <div class="section-head reveal"><span class="eyebrow">While I&rsquo;m there</span>
     <h2>Other Things Worth Adding to the List</h2>
-    <p>One trip is cheaper than three. People routinely add a couple of these on while he is
+    <p>One trip is cheaper than three. People routinely add a couple of these on while I am
        already on site.</p></div>
   <div class="grid grid-3">
 {other_html}
@@ -700,7 +700,7 @@ def build_service(s):
 '''
     html += cta_band(
         h=f"Need {s['short']} Doing?",
-        p=f"Call or text {C.PHONE_DISPLAY}, or send the form and {C.OWNER} will come and look. "
+        p=f"Call or text {C.PHONE_DISPLAY}, or send the form and I will come and look. "
           "Free estimates on anything beyond a small repair.",
         photo=main_photo)
     html += footer()
@@ -720,13 +720,13 @@ def build_area(town, miles, county, idx):
         f'<a class="chip" href="/areas/{town_slug(t)}.html">{esc(t)}</a>' for t in others)
 
     if is_home:
-        dist_line = (f"{town} is home. {C.OWNER} is based here, which means short notice is "
-                     "genuinely possible and a quick look at something small does not cost "
-                     "anybody half a day.")
+        dist_line = (f"{town} is home. I am based here, which means short notice is genuinely "
+                     "possible and a quick look at something small does not cost either of us "
+                     "half a day.")
     else:
-        dist_line = (f"{town} is about {miles} miles from {C.OWNER}&rsquo;s base in {C.CITY}, "
-                     f"well inside the {C.RADIUS_MI} miles he covers. No travel surcharge, and "
-                     "no pretending a two-hour round trip is a quick call-out.")
+        dist_line = (f"{town} is about {miles} miles from my base in {C.CITY}, well inside the "
+                     f"{C.RADIUS_MI} miles I cover. No travel surcharge, and no pretending a "
+                     "two-hour round trip is a quick call-out.")
 
     svc_links = "\n".join(
         f'      <li><a href="/services/{s["slug"]}.html">{esc(s["name"])}</a></li>'
@@ -740,22 +740,22 @@ def build_area(town, miles, county, idx):
     html += page_hero(
         f"Handyman &amp; Painting in {esc(town)}, {C.STATE_ABBR}",
         f"{esc(county)} &mdash; "
-        + (f"{esc(C.OWNER)}&rsquo;s home town." if is_home
-           else f"about {miles} miles from {esc(C.OWNER)}&rsquo;s base in {esc(C.CITY)}."),
+        + ("my home town." if is_home
+           else f"about {miles} miles from my base in {esc(C.CITY)}."),
         crumbs=[("Home", "/index.html"), ("Service Area", "/sitemap.html"), (town, None)],
         photo=AREA_PHOTOS[idx % len(AREA_PHOTOS)])
 
     html += f'''
 <section class="section tight"><div class="wrap split lean">
   <div class="prose reveal">
-    <p class="lead">{esc(C.OWNER)} covers {esc(town)} for handyman work, painting and the
-      general repair and remodeling jobs in between.</p>
+    <p class="lead">I cover {esc(town)} for handyman work, painting and the general repair
+      and remodeling jobs in between.</p>
     <p>{dist_line}</p>
     <p>The call that comes in most often from towns like {esc(town)} is not one big project. It
       is a list &mdash; a tap that drips, a door that sticks, a bedroom that has needed painting
       since before the kids left, and a deck board somebody keeps meaning to deal with. Getting
       all of it done in one or two visits by the same person is the whole point.</p>
-    <h3>What he gets called out for in {esc(town)}</h3>
+    <h3>What I get called out for in {esc(town)}</h3>
     <ul class="plain-list check-grid">
 {svc_links}
     </ul>
@@ -772,7 +772,7 @@ def build_area(town, miles, county, idx):
 
 <section class="section on-mist"><div class="wrap">
   <div class="section-head reveal"><span class="eyebrow">Nearby</span>
-    <h2>Other Towns He Covers</h2>
+    <h2>Other Towns I Cover</h2>
     <p>{C.RADIUS_MI} miles around {esc(C.HOME_BASE)}, which is most of central Illinois.</p></div>
   <div class="chip-row reveal">{chips}
     <a class="chip more" href="/sitemap.html">All {len(C.TOWNS)} towns {ARROW}</a></div>
@@ -788,8 +788,8 @@ def build_area(town, miles, county, idx):
 '''
     html += cta_band(
         h=f"Need a Hand in {town}?",
-        p=f"Call or text {C.PHONE_DISPLAY}. {C.OWNER} answers his own phone, and a photo "
-          "texted over usually gets you a price without anyone driving anywhere.",
+        p=f"Call or text {C.PHONE_DISPLAY}. I answer my own phone, and a photo texted over "
+          "usually gets you a price without anyone driving anywhere.",
         photo=AREA_PHOTOS[(idx + 3) % len(AREA_PHOTOS)])
     html += footer()
     write(f"areas/{slug}.html", html)
@@ -798,46 +798,47 @@ def build_area(town, miles, county, idx):
 # --------------------------------------------------------------------- about
 def build_about():
     html = head(
-        f"About {C.OWNER} — {C.BIZ}, {C.CITY} {C.STATE_ABBR}",
-        f"{C.OWNER} runs {C.BIZ} out of {C.HOME_BASE}. Handyman work, painting and general "
-        f"remodeling, owner-operated, back working in {C.CITY} and building the list back up.")
+        f"About Me — {C.OWNER_FULL}, {C.BIZ} | {C.CITY} {C.STATE_ABBR}",
+        f"{C.OWNER} Killion runs {C.BIZ} out of {C.HOME_BASE}. Handyman work, painting and "
+        f"general remodeling, owner-operated, back working in {C.CITY} and building the list "
+        f"back up.")
     html += nav("about")
     html += page_hero(
-        f"About {esc(C.OWNER)}",
+        "About Me",
         "Owner-operated means the person who quotes your job is the person who turns up to do "
         "it. That is most of what there is to say.",
-        crumbs=[("Home", "/index.html"), ("About Rick", None)],
+        crumbs=[("Home", "/index.html"), ("About Me", None)],
         photo="rick-at-work")
 
     html += f'''
 <section class="section tight"><div class="wrap split lean">
   <div class="prose reveal">
-    <p class="lead">{esc(C.BIZ)} is {esc(C.OWNER)}. One van, one phone number, and the same
-      person from the first call to the last bit of clean-up.</p>
-    <p>He does handyman work and painting, mostly, plus the trades that sit either side of them
+    <p class="lead">I&rsquo;m {esc(C.OWNER)}, and {esc(C.BIZ)} is me. One van, one phone
+      number, and the same person from the first call to the last bit of clean-up.</p>
+    <p>I do handyman work and painting, mostly, plus the trades that sit either side of them
       &mdash; decks and porches, windows and doors, tile and carpet, trim and finish carpentry,
       and room additions when a house needs to get bigger.</p>
     <h3>Back in {esc(C.CITY)}</h3>
-    <p>Here is the part most businesses would rather leave off a website. {esc(C.OWNER)} was
-      busy in this area a few years ago. Then he was away for a stretch, and he is back now and
-      starting the customer list again from close to nothing.</p>
-    <p>So no, you probably have not heard of him, and there is no decade of reviews to scroll
+    <p>Here is the part most businesses would rather leave off a website. I was busy in this area
+      a few years ago. Then I was away for a stretch, and I am back now and starting the customer
+      list again from close to nothing.</p>
+    <p>So no, you probably have not heard of me, and there is no decade of reviews to scroll
       through yet. Both of those are true and there is no point pretending otherwise. What is
       also true is that somebody rebuilding a reputation in a town the size of
       {esc(C.CITY)}&ndash;Normal has every reason in the world to do the job properly &mdash;
-      word of mouth is the only advertising that has ever worked in this trade, and he knows it.</p>
-    <h3>How he works</h3>
+      word of mouth is the only advertising that has ever worked in this trade, and I know it.</p>
+    <h3>How I work</h3>
     <p>Free estimates on anything beyond a quick repair. A straight number rather than a range.
       Floors covered and the mess cleaned up, because somebody has to live there afterwards. And
       an honest answer when the cheaper fix is the right one, or when a job genuinely needs a
       licensed plumber or electrician instead.</p>
-    <p>He would rather turn down a job he should not take than learn on your house.</p>
+    <p>I would rather turn down a job I should not take than learn on your house.</p>
   </div>
   <aside class="reveal side-cta">
     {figure("painting-detail")}
     <div class="channel-card">
-      <h3 style="margin-bottom:2px">Get hold of {esc(C.OWNER)}</h3>
-      <p>He answers his own phone.</p>
+      <h3 style="margin-bottom:2px">Get hold of me</h3>
+      <p>I answer my own phone.</p>
       <a class="channel" href="tel:{C.PHONE_TEL}">{ICONS["phone"]}
         <span><b>{C.PHONE_DISPLAY}</b><small>Call &mdash; fastest way</small></span></a>
       <a class="channel" href="sms:+1{C.PHONE_TEL}">{ICONS["text"]}
@@ -872,7 +873,7 @@ def build_about():
 # ------------------------------------------------------------------- contact
 def build_contact():
     html = head(
-        f"Contact {C.OWNER} — Free Estimates | {C.BIZ}",
+        f"Contact Me — Free Estimates | {C.BIZ}",
         f"Call or text {C.PHONE_DISPLAY}, or send the form. Free estimates on handyman work, "
         f"painting and remodeling within {C.RADIUS_MI} miles of {C.HOME_BASE}.")
     html += nav("contact")
@@ -887,7 +888,7 @@ def build_contact():
 <section class="section tight"><div class="wrap split lean">
   <div class="reveal">
     <div class="form-panel">
-      <h3 style="margin-bottom:4px">Tell {esc(C.OWNER)} what you need</h3>
+      <h3 style="margin-bottom:4px">Tell me what you need</h3>
       <p style="font-size:.94rem;opacity:.72;margin-bottom:20px">A list is fine. So is one
         leaky tap. The more detail you give, the closer the first number will be.</p>
       {quote_form("quote", source=f"{C.BIZ} demo — contact page")}
@@ -895,8 +896,8 @@ def build_contact():
   </div>
   <div class="reveal">
     <div class="channel-card">
-      <h3 style="margin-bottom:2px">Or just ring him</h3>
-      <p>No office, no answering service &mdash; it is his cell.</p>
+      <h3 style="margin-bottom:2px">Or just ring me</h3>
+      <p>No office, no answering service &mdash; it is my cell.</p>
       <a class="channel" href="tel:{C.PHONE_TEL}">{ICONS["phone"]}
         <span><b>{C.PHONE_DISPLAY}</b><small>Call &mdash; fastest way to get an answer</small></span></a>
       <a class="channel" href="sms:+1{C.PHONE_TEL}">{ICONS["text"]}
@@ -904,9 +905,9 @@ def build_contact():
       <a class="channel" href="mailto:{C.EMAIL}">{ICONS["mail"]}
         <span><b>{C.EMAIL}</b><small>Email, if you would rather write it out</small></span></a>
       <p style="margin:18px 0 0;font-size:.88rem;opacity:.72">{ICONS["pin"]}
-        Based in {esc(C.HOME_BASE)}, working {C.RADIUS_MI} miles around it.</p>
+        I am based in {esc(C.HOME_BASE)} and work {C.RADIUS_MI} miles around it.</p>
       <p style="margin:6px 0 0;font-size:.88rem;opacity:.72">{ICONS["wallet"]}
-        Estimates are free on anything beyond a small repair.</p>
+        My estimates are free on anything beyond a small repair.</p>
     </div>
     <div style="margin-top:22px">
       {pricing_table()}
@@ -921,7 +922,7 @@ def build_contact():
 {steps_block([
     ("Take a photo",
      "One picture of the thing that is wrong beats five minutes of describing it. Text it over "
-     "and you will usually get a realistic number straight back."),
+     "and I will usually get a realistic number straight back to you."),
     ("Write the whole list down",
      "Including the small stuff you think is not worth mentioning. One trip for eight jobs is a "
      "lot cheaper than eight separate call-outs."),
@@ -970,7 +971,7 @@ def build_reviews():
     html = head(
         f"Reviews — {C.BIZ}",
         f"{C.BIZ} is building its review history back up after {C.OWNER}'s return to "
-        f"{C.CITY}. Here is where his Google reviews will appear.")
+        f"{C.CITY}. Here is where the Google reviews will appear.")
     html += nav("reviews")
     html += page_hero(
         "Reviews",
@@ -981,20 +982,19 @@ def build_reviews():
     html += f'''
 <section class="section tight"><div class="wrap split lean">
   <div class="prose reveal">
-    <p class="lead">{esc(C.OWNER)} has no reviews online yet, and this page is not going to
-      invent any.</p>
-    <p>He worked this area a few years back, was away for a stretch, and has started the
-      customer list again from close to nothing. The reviews from before are not attached to
-      anything you can search for.</p>
-    <p>So the page stays thin for a little while, and then it will not. Every job from here ends
-      with him asking for a Google review, and every one of those lands here automatically.</p>
+    <p class="lead">I have no reviews online yet, and this page is not going to invent any.</p>
+    <p>I worked this area a few years back, was away for a stretch, and have started the customer
+      list again from close to nothing. The reviews from before are not attached to anything you
+      can search for.</p>
+    <p>So this page stays thin for a little while, and then it will not. Every job from here ends
+      with me asking for a Google review, and every one of those lands here automatically.</p>
     <h3>Which cuts both ways</h3>
-    <p>If you are weighing up calling someone with no reviews, that is fair enough. Two things
-      in his favour. You are dealing with the owner, so there is nobody to hide behind if the
+    <p>If you are weighing up calling someone with no reviews, that is fair enough. Two things in
+      my favour. You are dealing with the owner, so there is nobody for me to hide behind if the
       work is poor. And a tradesman with three reviews wants your job considerably more than one
-      with three hundred &mdash; right now, he is the one with three.</p>
-    <p>Ask him for a reference from a job he has done since he came back. He would far rather
-      you rang one than took his word for it.</p>
+      with three hundred &mdash; right now, I am the one with three.</p>
+    <p>Ask me for a reference from a job I have done since I came back. I would far rather you
+      rang one than took my word for it.</p>
   </div>
   <aside class="reveal side-cta">
     {figure("painted-room")}
@@ -1021,11 +1021,11 @@ def build_reviews():
 
 <section class="section on-white"><div class="wrap split lean">
   <div class="reveal">
-    <span class="eyebrow">If he has worked for you</span>
+    <span class="eyebrow">If I have worked for you</span>
     <h2>A Review Is Worth More Than a Tip</h2>
-    <p>For a one-person business starting over, a Google review is the single most useful thing
-      a customer can hand over. It takes two minutes and it is the difference between the next
-      person calling and the next person scrolling past.</p>
+    <p>For a one-person business starting over, a Google review is the single most useful
+      thing a customer can hand me. It takes two minutes and it is the difference between the
+      next person calling and the next person scrolling past.</p>
     <p style="font-size:.95rem;opacity:.75"><b>Demo note:</b> this button will point straight at
       {esc(C.OWNER)}&rsquo;s Google Business Profile once that is set up.</p>
     <div class="hero-ctas" style="margin-bottom:0">
@@ -1036,8 +1036,8 @@ def build_reviews():
     <h3>What makes a review useful</h3>
     {check_list([
         "Name the job — \"painted two bedrooms and the hallway\" beats \"great work\"",
-        "Say which town you are in, which helps the next neighbour find him",
-        "Mention whether he turned up when he said he would",
+        "Say which town you are in, which helps the next neighbour find me",
+        "Mention whether I turned up when I said I would",
         "Say whether the final price matched the quote",
         "Add a photo of the finished work if you took one",
     ])}
@@ -1077,8 +1077,8 @@ def build_gallery():
   <div class="reveal">
     <span class="eyebrow">What you are looking at</span>
     <h2>One Person, Most of the Trades</h2>
-    <p>Very little of what Rick does is exotic. It is painting, boards, glass, floors and trim
-      &mdash; done carefully, cleaned up behind, and finished when he said it would be.</p>
+    <p>Very little of what I do is exotic. It is painting, boards, glass, floors and trim
+      &mdash; done carefully, cleaned up behind, and finished when I said it would be.</p>
     <p>The value in calling one person for all of it is not really the price. It is that nobody
       has to coordinate four trades, and nobody can blame the last person who was in the house.</p>
     <div class="hero-ctas" style="margin-bottom:0">
@@ -1086,7 +1086,7 @@ def build_gallery():
     </div>
   </div>
   <div class="reveal">
-    <h3>Most-asked-for jobs</h3>
+    <h3>What people ask me for most</h3>
     {check_list([
         "A room, a hallway or a whole interior painted",
         "The outside of the house, or just the trim and front door",
@@ -1173,10 +1173,10 @@ def build_sitemap_page():
     <h3>Main pages</h3>
     <ul class="plain-list">
       <li><a href="/index.html">Home</a></li>
-      <li><a href="/services.html">What Rick Does</a></li>
+      <li><a href="/services.html">What I Do</a></li>
       <li><a href="/gallery.html">The Work</a></li>
       <li><a href="/reviews.html">Reviews</a></li>
-      <li><a href="/about.html">About {esc(C.OWNER)}</a></li>
+      <li><a href="/about.html">About Me</a></li>
       <li><a href="/contact.html">Contact &amp; Free Estimate</a></li>
       <li><a href="/credits.html">Photo credits</a></li>
     </ul>
@@ -1208,9 +1208,9 @@ def build_thank_you():
   <div class="reveal">
     <span class="eyebrow">Message sent</span>
     <h1 style="font-size:clamp(2rem,4.4vw,3.2rem)">Thanks &mdash; That&rsquo;s Gone Through</h1>
-    <p style="font-size:1.12rem;opacity:.8">{esc(C.OWNER)} picks these up himself and gets back
-      to people the same day wherever he can. If it is urgent, ringing him is always faster than
-      waiting on a reply.</p>
+    <p style="font-size:1.12rem;opacity:.8">I pick these up myself and get back to people the
+      same day wherever I can. If it is urgent, ringing me is always faster than waiting on a
+      reply.</p>
     <div class="hero-ctas" style="justify-content:center">
       <a class="btn btn-gold" href="tel:{C.PHONE_TEL}">{ICONS["phone"]} Call {C.PHONE_DISPLAY}</a>
       <a class="btn btn-ghost-dark" href="/index.html">Back to the site</a>
@@ -1235,7 +1235,7 @@ def build_404():
     <span class="eyebrow">404</span>
     <h1 style="font-size:clamp(2rem,4.4vw,3.2rem)">That Page Isn&rsquo;t Here</h1>
     <p style="font-size:1.1rem;opacity:.8">Something has moved or the link was wrong. The
-      sitemap has everything on it, or just ring {esc(C.OWNER)} and ask.</p>
+      sitemap has everything on it, or just give me a ring and ask.</p>
     <div class="hero-ctas" style="justify-content:center">
       <a class="btn btn-gold" href="/index.html">Back to the home page</a>
       <a class="btn btn-ghost-dark" href="/sitemap.html">See the sitemap</a>

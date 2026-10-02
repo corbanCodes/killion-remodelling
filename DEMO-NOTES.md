@@ -6,34 +6,36 @@ day when he sent revised logo artwork.
 
 ---
 
-## 1. One thing still blocking — the phone number
+## 1. Settled since the call
 
-**Rick never gave a phone number.** A lead-generation site for a handyman with
-no phone number on it is the one thing that stops the whole thing working, and
-the dock on mobile, the util bar, the CTA band on every page and both hero
-buttons are all wired to it.
+### The phone number is real
 
-The site currently shows **(309) 555-0100**. That is a deliberately fake number
-— 555-01xx is the reserved fictional range, so it cannot accidentally ring a
-real stranger if Rick forwards the demo link to someone.
+**(270) 256-5483**, given 2 Oct 2026. It is written in the US format the rest
+of the site uses; Rick wrote it as 270.256.5483, so if he wants the dots it is
+one line in `_generator/content.py`.
 
-Get his cell on the call, then change two lines in `_generator/content.py`:
+Worth one sentence on the call: 270 is a western-Kentucky area code, not a
+central-Illinois one. That is perfectly normal for someone who kept a cell from
+somewhere he used to live, and it fits the "away for a stretch" story — but a
+local looking at a Bloomington handyman may notice. If he ever wants a 309
+number, a cheap second line forwarded to his cell solves it. His call entirely.
 
-```python
-PHONE_DISPLAY = "(309) 555-0100"
-PHONE_TEL     = "3095550100"
-```
-
-and rebuild. It appears on 41 pages and updates everywhere.
-
-### Settled: the name is "Killion Remodeling"
+### The name is "Killion Remodeling"
 
 Rick sent two logo files. The first spelled it REMODELLING with two L's; the
 revised artwork spells it **REMODELING**, one L, and that is what the site uses
-now. Worth a sentence on the call — if he has signage, a truck or business cards
-already printed, make sure the site matches those rather than the other way
-round. `OWNER_FULL = "Rick Killion"` is still an inference from the business
-name rather than something he confirmed.
+now. Worth checking against whatever signage, truck lettering or cards he
+already has. `OWNER_FULL = "Rick Killion"` is still an inference from the
+business name rather than something he confirmed.
+
+### The site is written in his voice
+
+Every word of customer-facing copy is first person — "I", "me", "my". The only
+third-person copy left is the demo chrome (banner, pop-up, footer block, form
+notes, credits page) and the three sample review cards, where a customer is
+correctly talking *about* Rick. If you edit copy, keep that split.
+
+---
 
 ## 2. What the demo discloses, and where
 
@@ -182,7 +184,6 @@ Each one unlocks something currently missing from the site.
 
 | What | Why it matters |
 |---|---|
-| **Cell number** | Blocking. Nothing works without it. |
 | **Licence number and insurance** | Deliberately claimed nowhere right now. Every serious competitor prints theirs. Cheapest trust upgrade available. |
 | **Google Business Profile** | Free, and the main way a local handyman gets found. Unlocks the reviews page and the map pack. |
 | **His own photos** | See §4. Eight replaces the ones that matter most; the filenames are listed. |

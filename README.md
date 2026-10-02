@@ -2,10 +2,11 @@
 
 Rick — handyman, painting and general remodeling. Bloomington, Illinois, working
 a 50-mile radius. Built by [60 Minute Sites](https://60minutesites.com) as a
-demo, 30 Sep 2026; rebuilt 1 Oct 2026 with Rick's logo and real photography.
+demo, 30 Sep 2026; rebuilt 1 Oct 2026 with Rick's logo and real photography; his
+real number and first-person voice added 2 Oct 2026.
 
-**Read [DEMO-NOTES.md](DEMO-NOTES.md) before showing this to anyone** — the
-phone number is still a placeholder.
+Written throughout in Rick's own first person. The only third-person copy is
+the demo chrome and the sample review cards — see [DEMO-NOTES.md](DEMO-NOTES.md).
 
 ## Build
 
